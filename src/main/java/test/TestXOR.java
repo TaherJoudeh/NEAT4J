@@ -27,12 +27,9 @@ public class TestXOR {
 				.build();
 		AggregationConfig aggregationConfig = new AggregationConfig(AGGREGATION_FUNCTION.SUM);
 		
-		NEATConfig neatConfig = new NEATConfigBuilder(aggregationConfig, activationConfig)
+		NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1, aggregationConfig, activationConfig)
 				.setStructuralMutationAdvisor(false)
 				.setSingleStructuralMutation(false)
-				.setPopulationSize(50)
-				.setNumberOfInputs(2)
-				.setNumberOfOutputs(1)
 				.setMaxNumberOfHiddenNodes(1)
 				
 				.setCompatibilityExcessCoefficient(1)

@@ -22,8 +22,9 @@ public class NEATConfigBuilder {
 	 * @param aggregationConfig
 	 * @param activationConfig
 	 */
-	public NEATConfigBuilder(AggregationConfig aggregationConfig, ActivationConfig activationConfig) {
-		neatConfig = new NEATConfig(aggregationConfig, activationConfig);
+	public NEATConfigBuilder(int populationSize, int numberOfInputs, int numberOfOutputs,
+			AggregationConfig aggregationConfig, ActivationConfig activationConfig) {
+		neatConfig = new NEATConfig(populationSize, numberOfInputs, numberOfOutputs, aggregationConfig, activationConfig);
 	}
 	
 	/**
@@ -83,16 +84,6 @@ public class NEATConfigBuilder {
 	 */
 	public NEATConfigBuilder setGenerationThreshold(int generationThreshold) {
 		neatConfig.generationThreshold = generationThreshold;
-		return this;
-	}
-	
-	/**
-	 * 
-	 * @param resetOnExtinction
-	 * @return
-	 */
-	public NEATConfigBuilder setResetOnExtinction(boolean resetOnExtinction) {
-		neatConfig.resetOnExtinction = resetOnExtinction;
 		return this;
 	}
 	

@@ -150,32 +150,31 @@ public class NEATConfig implements Serializable {
 	protected int populationSize;
 	
 	// Termination
-	protected FITNESS_CRITERION fitnessCriterion;
-	protected boolean fitnessTermination;
-	protected double fitnessThreshold;
-	protected boolean generationTermination;
-	protected int generationThreshold;
-	protected boolean resetOnExtinction = true;
+	protected FITNESS_CRITERION fitnessCriterion = FITNESS_CRITERION.MAX;
+	protected boolean fitnessTermination = false;
+	protected double fitnessThreshold = 0;
+	protected boolean generationTermination = false;
+	protected int generationThreshold = 0;
 	
 	// Stagnation
 	protected SPECIES_FITNESS_FUNCTION speciesFitnessFunction = SPECIES_FITNESS_FUNCTION.MEAN;
 	protected int stagnation = 15;
-	protected int speciesElitism;
+	protected int speciesElitism = 0;
 	
 	// Reproduction
-	protected int elitism;
-	protected double survivalThreshold = 0.2d;
-	protected SELECTION_TYPE selectionType;
-	protected int tournamentSize;
+	protected int elitism = 0;
+	protected double survivalThreshold = 0.5d;
+	protected SELECTION_TYPE selectionType = SELECTION_TYPE.ROULETTE_WHEEL;
+	protected int tournamentSize = 1;
 	
 	// Speciation
-	protected double compatibilityThreshold;
+	protected double compatibilityThreshold = 3;
 	protected double compatibilityExcessCoefficient = 1;
 	protected double compatibilityDisjointCoefficient = 1;
 	protected double compatibilityWeightCoefficient = 0.5;
 	protected boolean dynamicCompatibilityThreshold = false;
-	protected int targetNumberOfSpecies;
-	protected double compatabilityThresholdAdjustingFactor;
+	protected int targetNumberOfSpecies = 0;
+	protected double compatabilityThresholdAdjustingFactor = 0.1;
 	
 	// Genome
 	protected int numberOfInputs;
@@ -190,57 +189,61 @@ public class NEATConfig implements Serializable {
 	protected CONNECTIVITY initConnectivity = CONNECTIVITY.UNCONNECTED;
 	
 	protected ActivationFunction.ACTIVATION_FUNCTION activationDefault = ActivationFunction.ACTIVATION_FUNCTION.SIGMOID;
-	protected double activationMutationRate;
+	protected double activationMutationRate = 0;
 	protected AggregationFunction.AGGREGATION_FUNCTION aggregationDefault = AggregationFunction.AGGREGATION_FUNCTION.SUM;
-	protected double aggregationMutationRate;
+	protected double aggregationMutationRate = 0;
 	
 	protected double biasInitMean = 0;
 	protected double biasInitStdev = 1;
 	protected DISTRIBUTION biasInitType = DISTRIBUTION.NORMAL;
 	protected double biasMaxValue = 50;
 	protected double biasMinValue = -50;
-	protected double biasMutationPower;
-	protected double biasAdjustingRate;
-	protected double biasRandomizingRate;
+	protected double biasMutationPower = 0.1d;
+	protected double biasAdjustingRate = 0.8d;
+	protected double biasRandomizingRate = 0.1;
 	
-	protected double probAddConnection;
+	protected double probAddConnection = 0.03;
 	protected double probRecurrentConnection = 0.1;
-	protected double probDeleteConnection;
+	protected double probDeleteConnection = 0;
 	protected boolean enabledDefault = true;
 	
-	protected double enabledMutationRate;
-	protected double enabledRateToEnabled;
-	protected double enabledRateToDisabled;
+	protected double enabledMutationRate = 0;
+	protected double enabledRateToEnabled = 0;
+	protected double enabledRateToDisabled = 0;
 	
 	protected boolean feedForward = true;
 	
-	protected double probAddNode;
-	protected double probDeleteNode;
+	protected double probAddNode = 0.01;
+	protected double probDeleteNode = 0;
 	
 	protected double responseInitMean = 1;
 	protected double responseInitStdev = 0;
 	protected DISTRIBUTION responseInitType = DISTRIBUTION.NORMAL;
 	protected double responseMaxValue = 50;
 	protected double responseMinValue = -50;
-	protected double responseMutationPower;
-	protected double responseAdjustingRate;
-	protected double responseRandomizingRate;
+	protected double responseMutationPower = 0.1d;
+	protected double responseAdjustingRate = 0.7d;
+	protected double responseRandomizingRate = 0.1d;
 	
-	protected boolean singleStructuralMutation;
-	protected boolean structuralMutationAdvisor;
+	protected boolean singleStructuralMutation = false;
+	protected boolean structuralMutationAdvisor = false;
 	
 	protected double weightInitMean = 0;
 	protected double weightInitStdev = 1;
 	protected DISTRIBUTION weightInitType = DISTRIBUTION.NORMAL;
 	protected double weightMaxValue = 50;
 	protected double weightMinValue = -50;
-	protected double weightMutationPower;
-	protected double weightAdjustingRate;
-	protected double weightRandomizingRate;
+	protected double weightMutationPower = 0.1d;
+	protected double weightAdjustingRate = 0.8d;
+	protected double weightRandomizingRate = 0.1d;
 	
-	protected double probConnectInit;
+	protected double probConnectInit = 0.5d;
 
-	protected NEATConfig(AggregationConfig aggregationConfig, ActivationConfig activationConfig) {
+	protected NEATConfig(int populationSize, int numberOfInputs, int numberOfOutputs,
+			AggregationConfig aggregationConfig, ActivationConfig activationConfig) {
+		this.populationSize = populationSize;
+		this.numberOfInputs = numberOfInputs;
+		this.numberOfOutputs = numberOfOutputs;
 		this.aggregationConfig = aggregationConfig;
 		this.activationConfig = activationConfig;
 	}
@@ -251,7 +254,6 @@ public class NEATConfig implements Serializable {
 	public double getFitnessThreshold() { return fitnessThreshold; }
 	public boolean isGenerationTermination() { return generationTermination; }
 	public int getGenerationThreshold() { return generationThreshold; }
-	public boolean isResetOnExtinction() { return resetOnExtinction; }
 	public SPECIES_FITNESS_FUNCTION getSpeciesFitnessFunction() { return speciesFitnessFunction; }
 	public int getStagnation() { return stagnation; }
 	public int getSpeciesElitism() { return speciesElitism; }
