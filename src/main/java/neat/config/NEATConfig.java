@@ -5,6 +5,11 @@ import java.io.Serializable;
 import main.java.neat.functions.ActivationFunction;
 import main.java.neat.functions.AggregationFunction;
 
+/**
+ * 
+ * @author Taher Joudeh
+ *
+ */
 public class NEATConfig implements Serializable {
 
 	private static final long serialVersionUID = -6643302886500758542L;
@@ -56,7 +61,7 @@ public class NEATConfig implements Serializable {
 	
 	/**
 	 * 
-	 * @author Gamer
+	 * @author Taher Joudeh
 	 *
 	 */
 	public static enum DISTRIBUTION {
@@ -73,7 +78,7 @@ public class NEATConfig implements Serializable {
 	
 	/**
 	 * 
-	 * @author Gamer
+	 * @author Taher Joudeh
 	 *
 	 */
 	public static enum CONNECTIVITY {
@@ -100,14 +105,14 @@ public class NEATConfig implements Serializable {
 		/**
 		 * Each input node is connected to all hidden and output nodes.
 		 * If there is no hidden nodes, then each input node is connected to all output nodes.
-		 * If feedforward parameter is false then each hidden and output node will have a recurrent connection to itself.
+		 * If feedforward parameter is set to false then each hidden and output node will have a recurrent connection to itself.
 		 */
 		FULL_NO_DIRECT,
 
 		/**
 		 * Each input node is connected to all hidden and output nodes, and each hidden
 		 * node is connected to all output nodes.
-		 * If feedforward is off then each hidden and output node will have a recurrent connection to itself.
+		 * If feedforward parameter is set to false then each hidden and output node will have a recurrent connection to itself.
 		 */
 		FULL_DIRECT,
 		
@@ -126,7 +131,7 @@ public class NEATConfig implements Serializable {
 	
 	/**
 	 * 
-	 * @author Gamer
+	 * @author Taher Joudeh
 	 *
 	 */
 	public static enum SELECTION_TYPE {
