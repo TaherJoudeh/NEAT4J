@@ -22,7 +22,7 @@
    - Example: ***TestXOR*** demonstrates evolving a network to solve XOR.
 ## Installation
 - Clone the Repository:
-   `git clone https://github.com/yourusername/NEAT4J.git`
+   `git clone https://github.com/TaherJoudeh/NEAT4J`
 ## Quick Start
 1. Configure NEAT
    
