@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import main.java.neat.functions.AggregationFunction;
+import main.java.neat.functions.AggregationFunction.AGGREGATION_FUNCTION;
 
 /**
  * 
@@ -13,53 +14,6 @@ import main.java.neat.functions.AggregationFunction;
 public class AggregationConfig implements Serializable {
 
 	private static final long serialVersionUID = 5248096586882534249L;
-
-	/**
-	 * 
-	 * @author Taher Joudeh
-	 *
-	 */
-	public static enum AGGREGATION_FUNCTION {
-		/**
-		 * 
-		 */
-		SUM,
-		
-		/**
-		 * 
-		 */
-		PRODUCT,
-		
-		/**
-		 * 
-		 */
-		MIN,
-		
-		/**
-		 * 
-		 */
-		MAX,
-		
-		/**
-		 * 
-		 */
-		MEAN,
-		
-		/**
-		 * 
-		 */
-		MEDIAN,
-		
-		/**
-		 * 
-		 */
-		MAXABS,
-		
-		/**
-		 * 
-		 */
-		RANDOM
-	}
 	
 	private ArrayList<AGGREGATION_FUNCTION> allowedAggregationFunctions;
 	

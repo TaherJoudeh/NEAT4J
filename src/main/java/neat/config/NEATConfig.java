@@ -3,6 +3,7 @@ package main.java.neat.config;
 import java.io.Serializable;
 
 import main.java.neat.functions.ActivationFunction;
+import main.java.neat.functions.AggregationFunction;
 
 public class NEATConfig implements Serializable {
 
@@ -176,7 +177,7 @@ public class NEATConfig implements Serializable {
 	protected int numberOfOutputs;
 	protected int[] startingHiddenNodes = new int[] {};
 	protected int maxNumberOfHiddenNodes = Integer.MAX_VALUE;
-	protected AggregationConfig.AGGREGATION_FUNCTION startingAggregationFunction = AggregationConfig.AGGREGATION_FUNCTION.SUM;
+	protected AggregationFunction.AGGREGATION_FUNCTION startingAggregationFunction = AggregationFunction.AGGREGATION_FUNCTION.SUM;
 	protected ActivationFunction.ACTIVATION_FUNCTION startingActivationFunctionForHiddenNode = ActivationFunction.ACTIVATION_FUNCTION.SIGMOID;
 	protected ActivationFunction.ACTIVATION_FUNCTION startingActivationFunctionForOutputNode = ActivationFunction.ACTIVATION_FUNCTION.SIGMOID;
 	protected AggregationConfig aggregationConfig;
@@ -185,7 +186,7 @@ public class NEATConfig implements Serializable {
 	
 	protected ActivationFunction.ACTIVATION_FUNCTION activationDefault = ActivationFunction.ACTIVATION_FUNCTION.SIGMOID;
 	protected double activationMutationRate;
-	protected AggregationConfig.AGGREGATION_FUNCTION aggregationDefault = AggregationConfig.AGGREGATION_FUNCTION.SUM;
+	protected AggregationFunction.AGGREGATION_FUNCTION aggregationDefault = AggregationFunction.AGGREGATION_FUNCTION.SUM;
 	protected double aggregationMutationRate;
 	
 	protected double biasInitMean = 0;
@@ -264,7 +265,7 @@ public class NEATConfig implements Serializable {
 	public int getNumberOfOutputs() { return numberOfOutputs; }
 	public int[] getStartingHiddenNodes() { return startingHiddenNodes; }
 	public int getMaxNumberOfHiddenNodes() { return maxNumberOfHiddenNodes; }
-	public AggregationConfig.AGGREGATION_FUNCTION getStartingAggregationFunction() { return startingAggregationFunction; }
+	public AggregationFunction.AGGREGATION_FUNCTION getStartingAggregationFunction() { return startingAggregationFunction; }
 	public ActivationFunction.ACTIVATION_FUNCTION getStartingActivationFunctionForHiddenNodes() { return startingActivationFunctionForHiddenNode; }
 	public ActivationFunction.ACTIVATION_FUNCTION getStartingActivationFunctionForOutputNodes(){ return startingActivationFunctionForOutputNode; }
 	public AggregationConfig getAggregationConfig() { return aggregationConfig; }
@@ -272,7 +273,7 @@ public class NEATConfig implements Serializable {
 	public CONNECTIVITY getInitConnectivity() { return initConnectivity; }
 	public ActivationFunction.ACTIVATION_FUNCTION getActivationDefault(){ return activationDefault; }
 	public double getActivationMutationRate() { return activationMutationRate; }
-	public AggregationConfig.AGGREGATION_FUNCTION getAggregationDefault() { return aggregationDefault; }
+	public AggregationFunction.AGGREGATION_FUNCTION getAggregationDefault() { return aggregationDefault; }
 	public double getAggregationMutationRate() { return aggregationMutationRate; }
 	public double getBiasInitMean() { return biasInitMean; }
 	public double getBiasInitStdev() { return biasInitStdev; }

@@ -3,12 +3,58 @@ package main.java.neat.functions;
 import java.io.Serializable;
 import java.util.Arrays;
 import main.java.neat.config.AggregationConfig;
-import main.java.neat.config.AggregationConfig.AGGREGATION_FUNCTION;
 
 public abstract class AggregationFunction implements Serializable {
 	
 	private static final long serialVersionUID = 422002331363828167L;
 
+	/**
+	 * 
+	 * @author Taher Joudeh
+	 *
+	 */
+	public static enum AGGREGATION_FUNCTION {
+		/**
+		 * 
+		 */
+		SUM,
+		
+		/**
+		 * 
+		 */
+		PRODUCT,
+		
+		/**
+		 * 
+		 */
+		MIN,
+		
+		/**
+		 * 
+		 */
+		MAX,
+		
+		/**
+		 * 
+		 */
+		MEAN,
+		
+		/**
+		 * 
+		 */
+		MEDIAN,
+		
+		/**
+		 * 
+		 */
+		MAXABS,
+		
+		/**
+		 * 
+		 */
+		RANDOM
+	}
+	
 	public final static AggregationFunction getAggregationFunction(AGGREGATION_FUNCTION aggregationFunction) {
 		AggregationFunction aggFunction = null;
 		

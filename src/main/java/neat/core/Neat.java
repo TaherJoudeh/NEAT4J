@@ -3,11 +3,10 @@ package main.java.neat.core;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
-
-import main.java.neat.config.AggregationConfig.AGGREGATION_FUNCTION;
 import main.java.neat.config.NEATConfig;
 import main.java.neat.config.NEATConfig.FITNESS_CRITERION;
 import main.java.neat.functions.AggregationFunction;
+import main.java.neat.functions.AggregationFunction.AGGREGATION_FUNCTION;
 
 /**
  * 

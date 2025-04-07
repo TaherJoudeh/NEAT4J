@@ -6,6 +6,7 @@ import main.java.neat.config.NEATConfig.FITNESS_CRITERION;
 import main.java.neat.config.NEATConfig.SELECTION_TYPE;
 import main.java.neat.config.NEATConfig.SPECIES_FITNESS_FUNCTION;
 import main.java.neat.functions.ActivationFunction;
+import main.java.neat.functions.AggregationFunction;
 
 /**
  * 
@@ -280,7 +281,7 @@ public class NEATConfigBuilder {
 	 * @param startingAggregationFunction
 	 * @return
 	 */
-	public NEATConfigBuilder setStartingAggregationFunction(AggregationConfig.AGGREGATION_FUNCTION startingAggregationFunction) {
+	public NEATConfigBuilder setStartingAggregationFunction(AggregationFunction.AGGREGATION_FUNCTION startingAggregationFunction) {
 		neatConfig.startingAggregationFunction = startingAggregationFunction;
 		return this;
 	}
@@ -340,7 +341,7 @@ public class NEATConfigBuilder {
 	 * @param aggregationDefault
 	 * @return
 	 */
-	public NEATConfigBuilder setAggregationDefault(AggregationConfig.AGGREGATION_FUNCTION aggregationDefault) {
+	public NEATConfigBuilder setAggregationDefault(AggregationFunction.AGGREGATION_FUNCTION aggregationDefault) {
 		neatConfig.aggregationDefault = aggregationDefault;
 		return this;
 	}
