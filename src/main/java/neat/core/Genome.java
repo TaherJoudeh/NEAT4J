@@ -1,0 +1,972 @@
+package main.java.neat.core;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Random;
+import java.util.stream.Collectors;
+import main.java.neat.config.NEATConfig;
+import main.java.neat.core.Node.TYPE;
+import main.java.neat.functions.ActivationFunction;
+import main.java.neat.functions.ActivationFunction.ACTIVATION_FUNCTION;
+import main.java.neat.functions.AggregationFunction;
+
+/**
+ * 
+ * @author Taher Joudeh
+ *
+ */
+public class Genome implements Serializable {
+
+	private static final long serialVersionUID = -1380168298131314999L;
+
+	private transient Random random;
+	
+	private NEATConfig neatConfig;
+	private LinkedList<Node> nodes;
+	private LinkedList<Connection> connections;
+	
+	private LinkedList<Node> inputNodes;
+	private LinkedList<Node> hiddenNodes;
+	private LinkedList<Node> outputNodes;
+	private LinkedList<Node>[] nodesByLayer;
+	private int numOfHiddenlayers;
+	private int maxInnovationNumber;
+	
+	private HashMap<Node,double[]> nodesCoordinates;
+	private int width, height;
+	private double nodeSize;
+	private boolean mutated;
+	
+	protected Genome(NEATConfig neatConfig, boolean init) {
+		random = new Random();
+		this.neatConfig = neatConfig;
+		nodes = new LinkedList<> ();
+		connections = new LinkedList<> ();
+		
+		inputNodes = new LinkedList<> ();
+		hiddenNodes = new LinkedList<> ();
+		outputNodes = new LinkedList<> ();
+		
+		nodesCoordinates = new HashMap<> ();
+		width = 0;
+		height = 0;
+		nodeSize = 0;
+		mutated = false;
+		
+		if (init)
+			init();
+	}
+	
+	public int getNumberOfConnections() { return connections.size(); }
+	public int getNumberOfHiddenNodes() { return hiddenNodes.size(); }
+	public int getNumberOfLayers() { return numOfHiddenlayers+2; }
+	
+	public LinkedList<Node> getInputNodes() { return new LinkedList<Node> (inputNodes); }
+	public LinkedList<Node> getHiddenNodes() { return new LinkedList<Node> (hiddenNodes); }
+	public LinkedList<Node> getOutputNodes() { return new LinkedList<Node> (outputNodes); }
+	public LinkedList<Node> getNodes() { return new LinkedList<Node> (nodes); }
+	public LinkedList<Node>[] getNodesByLayers() { return nodesByLayer; }
+	
+	public LinkedList<Connection> getConnections() { return new LinkedList<Connection> (connections); }
+	
+	protected HashMap<Node,double[]> getNodesCoordinates(int width, int height, double nodeSize) {
+		if (this.width != width || this.height != height || this.nodeSize != nodeSize || mutated) {
+			this.width = width;
+			this.height = height;
+			this.nodeSize = nodeSize;
+			mutated = false;
+			updateNodesCoordinates();
+		}
+		return nodesCoordinates;
+	}
+	
+	private void updateNodesCoordinates() {
+		
+		int layers = numOfHiddenlayers+2;
+		int[] layerCounts = new int[layers];
+		
+		for (int i = 0; i < nodes.size(); i++) {
+			
+			Node node = nodes.get(i);
+			int nodeLayer = 0;
+			
+			if (node.getType() == TYPE.OUTPUT)
+				nodeLayer = layers-1;
+			else nodeLayer = node.getLayer();
+			
+			int layerSize = nodesByLayer[nodeLayer].size();
+			
+			double x = nodeLayer/(double)(layers-1);
+			double margin = height/(double)layerSize;
+			double y = layerCounts[nodeLayer]++*margin;
+			
+			double margined = (layerSize-1)*margin;
+			x *= width;
+			y += height/2d - margined/2d;
+			
+			if (node.getType() == TYPE.OUTPUT)
+				x -= (nodeSize+4);
+			else if (node.getType() == TYPE.INPUT)
+				x += 4;
+			else x -= nodeSize/2d;
+			
+			if (nodesCoordinates.containsKey(node)) {
+				nodesCoordinates.get(node)[0] = x;
+				nodesCoordinates.get(node)[1] = y;
+			}else nodesCoordinates.put(node, new double[] {x,y});
+			
+		}
+		
+	}
+	
+	protected double[] feed(double[] input) {
+		
+		double[] output = new double[neatConfig.getNumberOfOutputs()];
+		
+		for (int i = 0; i < neatConfig.getNumberOfInputs(); i++)
+			inputNodes.get(i).setValue(input[i]);
+		
+		int count = 0;
+		for (int i = 0; i < numOfHiddenlayers+2; i++) {
+			for (int j = 0; j < nodesByLayer[i].size(); j++) {
+				nodesByLayer[i].get(j).activate();
+				if (nodesByLayer[i].get(j).getType() == TYPE.OUTPUT)
+					output[count++] = nodesByLayer[i].get(j).getValue();
+			}
+		}
+		
+		return output;
+	}
+	
+	protected boolean[] feed2(double[] input) {
+		boolean[] output = new boolean[neatConfig.getNumberOfOutputs()];
+		
+		for (int i = 0; i < neatConfig.getNumberOfInputs(); i++)
+			inputNodes.get(i).setValue(input[i]);
+		
+		int count = 0;
+		for (int i = 0; i < numOfHiddenlayers+2; i++) {
+			for (int j = 0; j < nodesByLayer[i].size(); j++) {
+				nodesByLayer[i].get(j).activate();
+				if (nodesByLayer[i].get(j).getType() == TYPE.OUTPUT)
+					output[count++] = nodesByLayer[i].get(j).isActivated();
+			}
+		}
+		
+		return output;
+	}
+	
+	private void init() {
+		
+		initNodes();
+		setNodesByType();
+		initConnecting();
+		updateLayers();
+		setMaxInnovationNumber();
+		
+	}
+	
+	private void initNodes() {
+		int splitInnovation = -1;
+		for (int i = 0; i < neatConfig.getNumberOfInputs(); i++) {
+			Node node = new Node(TYPE.INPUT);
+			node.setSplitInnovationNumber(splitInnovation--);
+			node.setActivationFunction(ActivationFunction.getActivationFunction(ACTIVATION_FUNCTION.LINEAR,
+					neatConfig.getActivationConfig()));
+			nodes.add(node);
+		}
+		
+		for (int i = 0; i < neatConfig.getStartingHiddenNodes().length; i++) {
+			for (int j = 0; j < neatConfig.getStartingHiddenNodes()[i]; j++) {
+				Node node = new Node(TYPE.HIDDEN);
+				node.setSplitInnovationNumber(splitInnovation--);
+				node.setLayer(i+1);
+				
+				node.setAggregationFunction(AggregationFunction.getAggregationFunction(
+						neatConfig.getStartingAggregationFunction()
+						));
+				node.setActivationFunction(ActivationFunction.getActivationFunction(
+						neatConfig.getStartingActivationFunctionForHiddenNodes(), neatConfig.getActivationConfig()
+						));
+				node.randomizeBias(neatConfig.getBiasInitMean(),neatConfig.getBiasInitStdev(),neatConfig.getBiasInitType(),
+						neatConfig.getBiasMaxValue(),neatConfig.getBiasMinValue());
+				node.randomizeResponse(neatConfig.getResponseInitMean(),neatConfig.getResponseInitStdev(),neatConfig.getBiasInitType(),
+						neatConfig.getResponseMaxValue(),neatConfig.getResponseMinValue());
+				
+				nodes.add(node);
+			}
+		}
+		
+		for (int i = 0; i < neatConfig.getNumberOfOutputs(); i++) {
+			Node node = new Node(TYPE.OUTPUT);
+			node.setLayer(Integer.MAX_VALUE);
+			node.setSplitInnovationNumber(splitInnovation--);
+			
+			node.setAggregationFunction(AggregationFunction.getAggregationFunction(
+					neatConfig.getStartingAggregationFunction()
+					));
+			node.setActivationFunction(ActivationFunction.getActivationFunction(
+					neatConfig.getStartingActivationFunctionForOutputNodes(), neatConfig.getActivationConfig()
+					));
+			node.randomizeBias(neatConfig.getBiasInitMean(),neatConfig.getBiasInitStdev(),neatConfig.getBiasInitType(),
+					neatConfig.getBiasMaxValue(),neatConfig.getBiasMinValue());
+			node.randomizeResponse(neatConfig.getResponseInitMean(),neatConfig.getResponseInitStdev(),neatConfig.getBiasInitType(),
+					neatConfig.getResponseMaxValue(),neatConfig.getResponseMinValue());
+			
+			nodes.add(node);
+		}
+		
+		numOfHiddenlayers = neatConfig.getStartingHiddenNodes().length;
+		
+	}
+	private void initConnecting() {
+		
+		switch (neatConfig.getInitConnectivity()) {
+		
+		case FEATURE_SELECTION_NEAT_NO_HIDDEN:
+			featureSelectionNeatNoHiddenInit();
+			break;
+		case FEATURE_SELECTION_NEAT_HIDDEN:
+			featureSelectionNeatHiddenInit();
+			break;
+		case LAYER_BY_LAYER:
+			layerByLayerInit();
+			break;
+		case FULL_NO_DIRECT:
+			noDirectInit(1);
+			break;
+		case FULL_DIRECT:
+			directInit(1);
+			break;
+		case PARTIAL_NO_DIRECT:
+			noDirectInit(neatConfig.getProbConnectInit());
+			break;
+		case PARTIAL_DIRECT:
+			directInit(neatConfig.getProbConnectInit());
+			break;
+		default:
+			break;
+		}
+	}
+	private void featureSelectionNeatNoHiddenInit() {
+		
+		Node randomInputFeature = inputNodes.get(random.nextInt(neatConfig.getNumberOfInputs()));
+		
+		for (int i = 0; i < neatConfig.getNumberOfOutputs(); i++)
+			addConnection(randomInputFeature,outputNodes.get(i), Connection.VOID_DOUBLE_VALUE, false);
+		
+	}
+	private void featureSelectionNeatHiddenInit() {
+		
+		Node randomInputFeature = inputNodes.get(random.nextInt(neatConfig.getNumberOfInputs()));
+		
+		for (int i = 0; i < hiddenNodes.size(); i++)
+			addConnection(randomInputFeature, hiddenNodes.get(i), Connection.VOID_DOUBLE_VALUE, false);
+		for (int i = 0; i < hiddenNodes.size(); i++)
+			for (int j = 0; j < neatConfig.getNumberOfOutputs(); j++)
+				addConnection(hiddenNodes.get(i), outputNodes.get(j), Connection.VOID_DOUBLE_VALUE, false);
+		for (int i = 0; i < neatConfig.getNumberOfOutputs(); i++)
+			addConnection(randomInputFeature,outputNodes.get(i), Connection.VOID_DOUBLE_VALUE, false);
+		
+	}
+	private void layerByLayerInit() {
+		
+		setNodesByLayer();
+		for (int i = 0; i < numOfHiddenlayers+1; i++)
+			for (int j = 0; j < nodesByLayer[i].size(); j++)
+				for (int k = 0; k < nodesByLayer[i+1].size(); k++)
+					addConnection(nodesByLayer[i].get(j), nodesByLayer[i+1].get(k), Connection.VOID_DOUBLE_VALUE, false);
+		
+	}
+	private void noDirectInit(double probConnectInit) {
+		
+		for (int i = 0; i < neatConfig.getNumberOfInputs(); i++) {
+			for (int j = 0; j < hiddenNodes.size(); j++) {
+				if (random.nextDouble() < probConnectInit)
+					addConnection(inputNodes.get(i), hiddenNodes.get(j), Connection.VOID_DOUBLE_VALUE, false);
+			}
+		}
+		
+		for (int i = 0; i < hiddenNodes.size(); i++) {
+			if (!neatConfig.isFeedForward() && random.nextDouble() < probConnectInit)
+				addConnection(hiddenNodes.get(i),hiddenNodes.get(i), Connection.VOID_DOUBLE_VALUE, true);
+			for (int j = 0; j < neatConfig.getNumberOfOutputs(); j++) {
+				if (random.nextDouble() < probConnectInit)
+					addConnection(hiddenNodes.get(i), outputNodes.get(j), Connection.VOID_DOUBLE_VALUE, false);
+			}
+		}
+		
+		if (hiddenNodes.size() == 0) {
+			for (int i = 0; i < neatConfig.getNumberOfInputs(); i++) {
+				for (int j = 0; j < outputNodes.size(); j++) {
+					if (random.nextDouble() < probConnectInit)
+						addConnection(inputNodes.get(i), outputNodes.get(j), Connection.VOID_DOUBLE_VALUE, false);
+				}
+			}
+		}
+		
+		for (int i = 0; i < outputNodes.size(); i++)
+			if (!neatConfig.isFeedForward() && random.nextDouble() < probConnectInit)
+				addConnection(outputNodes.get(i), outputNodes.get(i), Connection.VOID_DOUBLE_VALUE, true);
+		
+	}
+	private void directInit(double probConnectInit) {
+		for (int i = 0; i < neatConfig.getNumberOfInputs(); i++) {
+			for (int j = 0; j < hiddenNodes.size(); j++) {
+				if (random.nextDouble() < probConnectInit)
+					addConnection(inputNodes.get(i), hiddenNodes.get(j), Connection.VOID_DOUBLE_VALUE, false);
+			}
+		}
+		
+		for (int i = 0; i < hiddenNodes.size(); i++) {
+			if (!neatConfig.isFeedForward() && random.nextDouble() < probConnectInit)
+				addConnection(hiddenNodes.get(i),hiddenNodes.get(i), Connection.VOID_DOUBLE_VALUE, true);
+			for (int j = 0; j < neatConfig.getNumberOfOutputs(); j++) {
+				if (random.nextDouble() < probConnectInit)
+					addConnection(hiddenNodes.get(i), outputNodes.get(j), Connection.VOID_DOUBLE_VALUE, false);
+			}
+		}
+		
+		for (int i = 0; i < neatConfig.getNumberOfInputs(); i++) {
+			for (int j = 0; j < neatConfig.getNumberOfOutputs(); j++) {
+				if (!neatConfig.isFeedForward() && i == 0 && random.nextDouble() < probConnectInit)
+					addConnection(outputNodes.get(j), outputNodes.get(j), Connection.VOID_DOUBLE_VALUE, true);
+				if (random.nextDouble() < probConnectInit)
+					addConnection(inputNodes.get(i), outputNodes.get(j), Connection.VOID_DOUBLE_VALUE, false);
+			}
+		}
+	}
+	
+	private void setNodesByLayer() {
+		
+		@SuppressWarnings("unchecked")
+		LinkedList<Node>[] nodesByLayer = new LinkedList[numOfHiddenlayers+2];
+		
+		for (int i = 0; i < numOfHiddenlayers+2; i++)
+			nodesByLayer[i] = new LinkedList<> ();
+		
+		for (Node node: nodes) {
+			if (node.getType() == TYPE.OUTPUT)
+				nodesByLayer[numOfHiddenlayers+1].add(node);
+			else
+				nodesByLayer[node.getLayer()].add(node);
+		}
+		
+		this.nodesByLayer = nodesByLayer;
+		
+	}
+	
+	private void setNodesByType() {
+		inputNodes.clear();
+		hiddenNodes.clear();
+		outputNodes.clear();
+		
+		for (Node node: nodes) {
+			if (node.getType() == TYPE.INPUT)
+				inputNodes.add(node);
+			else if (node.getType() == TYPE.HIDDEN)
+				hiddenNodes.add(node);
+			else outputNodes.add(node);
+		}
+	}
+	
+	private void updateLayers() {
+		
+		Queue<Node> nodes = new LinkedList<> ();
+		HashMap<Node,Integer> nodeLayer = new HashMap<> ();
+		int count = 0;
+		
+		for (Node node: inputNodes) {
+			for (Connection connection: node.getOutConnections()) {
+				if (connection.getTo().getType() == TYPE.HIDDEN) {
+					nodes.add(connection.getTo());
+					nodeLayer.put(connection.getTo(), 1);
+				}
+			}
+		}
+		
+		while (!nodes.isEmpty()) {
+			
+			Node node = nodes.poll();
+			int currentLayer = nodeLayer.get(node);
+			
+			for (Connection connection: node.getOutConnections()) {
+				Node toNode = connection.getTo();
+				if (toNode.getType() != TYPE.HIDDEN || connection.isRecurrent())
+					continue;
+				if (nodeLayer.containsKey(toNode))
+	                nodeLayer.put(toNode, Math.max(currentLayer+1, nodeLayer.get(toNode)));
+	            else 
+	                nodeLayer.put(toNode, currentLayer+1);
+				nodes.add(toNode);
+			}
+			
+			count++;
+			if (count > 50000) {
+				System.out.println(this);
+				System.exit(0);
+			}
+		}
+		
+		int max = 0;
+		for (Node node: hiddenNodes) {
+			if (!nodeLayer.containsKey(node))
+				continue;
+			int layer = nodeLayer.get(node);
+			node.setLayer(layer);
+			if (layer > max)
+				max  = layer;
+		}
+		
+		handleRecurrentConnections();
+		numOfHiddenlayers = max;
+		setNodesByLayer();
+//		System.out.println("InputSize: " + inputNodes.size() + "\n" + this + "\n---------------------------");
+		testConnections("[After updateLayers]");
+		
+	}
+	
+	private void handleIsolatedNodes() {
+		int count = 0;
+		LinkedList<Node> hNodes = new LinkedList<> (hiddenNodes);
+		hNodes.removeIf(hn -> !hn.isIsolated());
+		while (!hNodes.isEmpty()) {
+			Node node = hNodes.remove();
+			deleteNode(node);
+			if (hNodes.isEmpty()) {
+				hNodes.addAll(hiddenNodes);
+				hNodes.removeIf(hn -> !hn.isIsolated());
+				count++;
+				if (count > 20000) {
+					System.out.println("[handleIsolatedNodes]\n" + this);
+					System.exit(0);
+				}
+			}
+		}
+		setMaxInnovationNumber();
+	}
+	
+	private void handleRecurrentConnections() {
+		if (neatConfig.isFeedForward())
+			return;
+		
+		LinkedList<Connection> recCon = new LinkedList<> (connections);
+		recCon.removeIf(c -> !c.isRecurrent());
+		
+		for (Connection recC: recCon) {
+			if (recC.getFrom() == recC.getTo())
+				continue;
+			if (recC.getFrom().getLayer() == recC.getTo().getLayer())
+				recC.setEnabled(false);
+			else if (recC.getFrom().getLayer() < recC.getTo().getLayer())
+				recC.setRecurrent(false);
+		}
+	}
+	
+	// Genome modifications
+	private boolean mutateAddConnection() {
+
+		if (random.nextDouble() >= neatConfig.getProbAddConnection())
+			return false;
+		
+		int numOfLayers = numOfHiddenlayers+2;
+		Node node1 = null, node2 = null;
+		
+		if (!neatConfig.isFeedForward() && random.nextDouble() < neatConfig.getProbRecurrentConnection()) {
+			
+			int randomLayer = random.nextInt(numOfLayers-1)+1;
+			int secondRandomLayer = random.nextInt(randomLayer)+1;
+			
+			int sizeOfRandomLayer = nodesByLayer[randomLayer].size();
+			int sizeOfSecondRandomLayer = nodesByLayer[secondRandomLayer].size();
+			
+			if (randomLayer == secondRandomLayer) {
+				Node node = nodesByLayer[randomLayer].get(random.nextInt(sizeOfRandomLayer));
+				node1 = node;
+				node2 = node;
+			} else {
+				node1 = nodesByLayer[randomLayer].get(random.nextInt(sizeOfRandomLayer));
+				node2 = nodesByLayer[secondRandomLayer].get(random.nextInt(sizeOfSecondRandomLayer));
+			}
+		}else {
+			int randomLayer = random.nextInt(numOfLayers-1);
+			int secondRandomLayer = random.nextInt(numOfLayers-(randomLayer+1))+(randomLayer+1);
+			
+			int sizeOfRandomLayer = nodesByLayer[randomLayer].size();
+			int sizeOfSecondRandomLayer = nodesByLayer[secondRandomLayer].size();
+			
+			node1 = nodesByLayer[randomLayer].get(random.nextInt(sizeOfRandomLayer));
+			node2 = nodesByLayer[secondRandomLayer].get(random.nextInt(sizeOfSecondRandomLayer));
+		}
+		
+		Connection newConnection = new Connection(node1,node2);
+		int index = connections.indexOf(newConnection);
+		
+		if (index != -1) {
+			if (!connections.get(index).isEnabled() && neatConfig.hasStructuralMutationAdvisor()) {
+					connections.get(index).setEnabled(true);
+					return true;
+			}else return false;
+		}
+			
+		addConnection(node1, node2, Connection.VOID_DOUBLE_VALUE, node1.getLayer() >= node2.getLayer());
+		setMaxInnovationNumber();
+		mutated = true;
+		
+		return true;
+		
+	}
+	private void addConnection(Node from, Node to, double weight, boolean recurrent) {
+		
+		Connection connection = new Connection(from,to);
+		connection.setRecurrent(recurrent);
+		connection.setInnovationNumber();
+		connection.connect();
+		
+		connection.setEnabled(neatConfig.enabledDefault());
+
+		if (weight == Connection.VOID_DOUBLE_VALUE)
+			connection.randomizeWeight(neatConfig.getWeightInitMean(), neatConfig.getWeightInitStdev(), neatConfig.getBiasInitType(),
+				neatConfig.getWeightMaxValue(), neatConfig.getWeightMinValue());
+		else connection.setWeight(Math.max(Math.min(neatConfig.getWeightMaxValue(), weight), neatConfig.getWeightMinValue()));
+		
+		Node node = getNodeBySplitInnovationNumber(connection.getInnovationNumber());
+		if (node != null)
+			connection.setNodeAddable(false);
+		
+		if (from == to)
+			from.updateSelfRecurrentConnection();
+		
+		connections.add(connection);
+		
+	}
+	private boolean mutateAddNode() {
+		
+		if (random.nextDouble() >= neatConfig.getProbAddNode() || hiddenNodes.size() >= neatConfig.getMaxNumberOfHiddenNodes())
+			return false;
+		
+		LinkedList<Connection> nodeAddableConnections = connections.stream().filter(c -> c.isNodeAddable() && c.isEnabled() && !c.isRecurrent())
+				.collect(Collectors.toCollection(LinkedList::new));
+		
+		if (nodeAddableConnections.isEmpty()) {
+			if (neatConfig.hasStructuralMutationAdvisor())
+				return mutateAddConnection();
+			return false;
+		}
+		
+		addNode(nodeAddableConnections.get(random.nextInt(nodeAddableConnections.size())));
+		updateLayers();
+		setMaxInnovationNumber();
+		mutated = true;
+		return true;
+		
+	}
+	private void addNode(Connection rc) {
+		
+		rc.setEnabled(false);
+		rc.setNodeAddable(false);
+		
+		Node newNode = new Node(TYPE.HIDDEN);
+		newNode.setSplitInnovationNumber(rc.getInnovationNumber());
+		newNode.setAggregationFunction(AggregationFunction.getAggregationFunction(
+				neatConfig.getStartingAggregationFunction()
+				));
+		newNode.setActivationFunction(ActivationFunction.getActivationFunction(
+				neatConfig.getStartingActivationFunctionForHiddenNodes(), neatConfig.getActivationConfig()
+				));
+		newNode.randomizeBias(neatConfig.getBiasInitMean(),neatConfig.getBiasInitStdev(),neatConfig.getBiasInitType(),
+				neatConfig.getBiasMaxValue(),neatConfig.getBiasMinValue());
+		newNode.randomizeResponse(neatConfig.getResponseInitMean(),neatConfig.getResponseInitStdev(),neatConfig.getResponseInitType(),
+				neatConfig.getResponseMaxValue(),neatConfig.getResponseMinValue());
+				
+		addConnection(rc.getFrom(), newNode, rc.getWeight(), false);
+		addConnection(newNode, rc.getTo(), 1, false);
+		nodes.add(newNode);
+		hiddenNodes.add(newNode);
+		
+	}
+	private boolean mutateDeleteConnection() {
+		
+		if (random.nextDouble() >= neatConfig.getProbDeleteConnection() || connections.isEmpty())
+			return false;
+		
+		Connection rc = connections.get(random.nextInt(connections.size()));
+		deleteConnection(rc);
+		handleIsolatedNodes();
+		updateLayers();
+		mutated = true;
+		return true;
+		
+	}
+	private void deleteConnection(Connection connection) {
+		connection.disconnect();
+		if (connection.getFrom() == connection.getTo())
+			connection.getFrom().removeSelfRecurrentConnection();
+		connections.remove(connection);
+	}
+	private boolean mutateDeleteNode() {
+		
+		if (random.nextDouble() >= neatConfig.getProbDeleteNode() || hiddenNodes.isEmpty())
+			return false;
+				
+		deleteNode(hiddenNodes.get(random.nextInt(hiddenNodes.size())));
+		handleIsolatedNodes();
+		updateLayers();
+		setMaxInnovationNumber();
+		mutated = true;
+				
+		return true;
+	}
+	private void deleteNode(Node node) {
+		
+		while (node.hasInputConnections())
+			deleteConnection(node.getInConnections().get(0));
+		while (node.hasOutputConnections())
+			deleteConnection(node.getOutConnections().get(0));
+		
+		nodes.remove(node);
+		hiddenNodes.remove(node);
+		Connection c = getConnectionByInnovationNumber(node.getSplitInnovationNumber());
+		if (c != null)
+			c.setNodeAddable(true);
+	}
+	private void mutateStructure() {
+						
+		if (mutateAddConnection() && neatConfig.isSingleStructuralMutation())
+			return;
+		if (mutateAddNode() && neatConfig.isSingleStructuralMutation())
+			return;
+		if (mutateDeleteConnection() && neatConfig.isSingleStructuralMutation())
+			return;
+		
+		mutateDeleteNode();
+				
+	}
+	private void mutateParameters() {
+		
+		for (Node node: nodes) {
+			
+			if (random.nextDouble() < neatConfig.getResponseAdjustingRate())
+				node.adjustResponse(neatConfig.getResponseMutationPower(), neatConfig.getResponseMaxValue(), neatConfig.getResponseMinValue());
+			else if (random.nextDouble() < neatConfig.getResponseRandomizingRate())
+				node.randomizeResponse(neatConfig.getResponseInitMean(), neatConfig.getResponseInitStdev(), neatConfig.getResponseInitType(),
+						neatConfig.getResponseMaxValue(), neatConfig.getResponseMinValue());
+			
+			if (random.nextDouble() < neatConfig.getBiasAdjustingRate())
+				node.adjustBias(neatConfig.getBiasMutationPower(), neatConfig.getBiasMaxValue(), neatConfig.getBiasMinValue());
+			else if (random.nextDouble() < neatConfig.getBiasRandomizingRate())
+				node.randomizeBias(neatConfig.getBiasInitMean(), neatConfig.getBiasInitStdev(), neatConfig.getBiasInitType(),
+						neatConfig.getBiasMaxValue(), neatConfig.getBiasMinValue()); 
+			
+			if (node.getType() == TYPE.HIDDEN && random.nextDouble() < neatConfig.getAggregationMutationRate()) {
+				int size = neatConfig.getAggregationConfig().getAllowedAggregationFunctions().size();
+				int randomIndex = random.nextInt(size);
+				node.setAggregationFunction(AggregationFunction.getAggregationFunction(
+						neatConfig.getAggregationConfig().getAllowedAggregationFunctions().get(randomIndex)
+						));
+			}
+			if (node.getType() != TYPE.INPUT && random.nextDouble() < neatConfig.getActivationMutationRate()) {
+				int size = neatConfig.getActivationConfig().getAllowedActivationFunctions().size();
+				int randomIndex = random.nextInt(size);
+				node.setActivationFunction(ActivationFunction.getActivationFunction(
+						neatConfig.getActivationConfig().getAllowedActivationFunctions().get(randomIndex), neatConfig.getActivationConfig()
+						));
+			}
+			
+			if (node.hasInputConnections()) {
+				for (Connection connection: node.getInConnections()) {
+					if (random.nextDouble() < neatConfig.getWeightAdjustingRate())
+						connection.adjustWeight(neatConfig.getWeightMutationPower(), neatConfig.getWeightMaxValue(), neatConfig.getWeightMinValue());
+					else if (random.nextDouble() < neatConfig.getWeightRandomizingRate())
+						connection.randomizeWeight(neatConfig.getWeightInitMean(), neatConfig.getWeightInitStdev(), neatConfig.getBiasInitType(),
+								neatConfig.getWeightMaxValue(), neatConfig.getWeightMinValue());
+					
+					double totalProbForEnable = neatConfig.getEnabledMutationRate();
+					if (connection.isEnabled())
+						totalProbForEnable += neatConfig.getEnabledRateToEnabled();
+					else totalProbForEnable += neatConfig.getEnabledRateToDisabled();
+					
+					if (random.nextDouble() < totalProbForEnable)
+						connection.setEnabled(!connection.isEnabled());
+				}
+			}
+		}
+		
+	}
+	
+	protected void mutate() {
+		
+		mutateStructure();
+		mutateParameters();
+		
+	}
+	
+	// Comparing and Evaluating
+	protected static double distance(Genome g1, Genome g2) {
+		
+		if (g1.connections.isEmpty() || g2.connections.isEmpty())
+			return Math.abs((g1.connections.size()-g2.connections.size())/2d);
+		
+		int excess = getNumberOfExcessGenes(g1, g2);
+		int disjoint = getNumberOfDisjointGenes(g1, g2);
+		double weightDiff = getWeightAbsoluteAverageDifference(g1, g2);
+		
+		double N = Math.max(g1.connections.size(), g2.connections.size());
+		
+		N = (N < 20) ? 1 : N;
+		
+		double distance = (g1.neatConfig.getCompatibilityExcessCoefficient()*(double)excess)/N
+				+ (g1.neatConfig.getCompatibilityDisjointCoefficient()*(double)disjoint)/N
+				+ (g1.neatConfig.getCompatibilityWeightCoefficient()*(double)weightDiff);
+		
+		return distance;
+				
+	}
+	private static int getNumberOfExcessGenes(Genome g1, Genome g2) {
+		
+		int numberOfExcessGenes = 0;
+		for (Connection connection: g1.connections) {
+			if (connection.getInnovationNumber() > g2.maxInnovationNumber)
+				numberOfExcessGenes++;
+		}
+		
+		for (Connection connection: g2.connections) {
+			if (connection.getInnovationNumber() > g1.maxInnovationNumber)
+				numberOfExcessGenes++;
+		}
+		
+		return numberOfExcessGenes;
+		
+	}
+	private static int getNumberOfDisjointGenes(Genome g1, Genome g2) {
+		
+		int numberOfDisjointGenes = 0;
+		for (Connection connection: g1.connections) {
+			if (g2.connections.indexOf(connection) == -1 && connection.getInnovationNumber() <= g2.maxInnovationNumber)
+				numberOfDisjointGenes++;
+		}
+		
+		for (Connection connection: g2.connections) {
+			if (g1.connections.indexOf(connection) == -1 && connection.getInnovationNumber() <= g1.maxInnovationNumber)
+				numberOfDisjointGenes++;
+		}
+		
+		return numberOfDisjointGenes;
+		
+	}
+	private static double getWeightAbsoluteAverageDifference(Genome g1, Genome g2) {
+		
+		int numberOfSimilarGenes = 0;
+		double sumOfAbsWeightDiff = 0;
+		
+		for (Connection connection: g1.connections) {
+			int indexInOther = g2.connections.indexOf(connection);
+			if (indexInOther != -1) {
+				numberOfSimilarGenes++;
+				sumOfAbsWeightDiff += Math.abs(connection.getWeight() - g2.connections.get(indexInOther).getWeight());
+			}
+		}
+		
+		if (numberOfSimilarGenes == 0)
+			return 5;
+		return sumOfAbsWeightDiff/(double)numberOfSimilarGenes;
+		
+	}
+	private void setMaxInnovationNumber() {
+		int max = Integer.MIN_VALUE;
+		for (Connection connection: connections)
+			if (connection.getInnovationNumber() > max)
+				max = connection.getInnovationNumber();
+		
+		maxInnovationNumber = max;
+	}
+	private Connection getConnectionByInnovationNumber(int innovationNumber) {
+		
+		for (Connection connection: connections) {
+			if (connection.getInnovationNumber() == innovationNumber)
+				return connection;
+		}
+		
+		return null;
+		
+	}
+	private Node getNodeBySplitInnovationNumber(int innovationNumber) {
+		for (Node node: nodes)
+			if (node.getSplitInnovationNumber() == innovationNumber)
+				return node;
+		
+		return null;
+	}
+	private Connection getConnection(Node from, Node to) {
+		for (Connection connection: connections)
+			if (connection.getFrom().equals(from) && connection.getTo().equals(to))
+				return connection;
+		return null;
+	}
+	
+	// Reproduction
+	protected static Genome crossover(Genome g1, Genome g2, boolean sameFitness) {
+		
+		Genome child = new Genome(g1.neatConfig, false);
+		
+		for (Node node: g1.nodes)
+			child.nodes.add(node.clone());
+		
+		for (Node node: g2.hiddenNodes)
+			if (!child.nodes.contains(node))
+				child.nodes.add(node.clone());
+						
+		for (Connection connection: g1.connections)
+			child.connections.add(connection.cloneAndConnect(child.nodes));
+		
+		for (Connection connection: g2.connections) {
+			int indexInChildConnections = child.connections.indexOf(connection);
+			
+			if (indexInChildConnections != -1) {
+				if (child.random.nextDouble() < 0.5)
+					child.connections.get(indexInChildConnections).setWeight(connection.getWeight());
+				if (child.connections.get(indexInChildConnections).isEnabled() ^ connection.isEnabled()) {
+					if (child.random.nextDouble() < 0.25)
+						child.connections.get(indexInChildConnections).setEnabled(true);
+					else child.connections.get(indexInChildConnections).setEnabled(false);
+				}
+			}
+			else if (sameFitness) {
+				Node from = child.getNodeBySplitInnovationNumber(connection.getFrom().getSplitInnovationNumber());
+				Node to = child.getNodeBySplitInnovationNumber(connection.getTo().getSplitInnovationNumber());
+				
+				if (!child.neatConfig.isFeedForward() || 
+				        from.getLayer() < to.getLayer() || 
+				        to.getType() == TYPE.OUTPUT)
+					child.connections.add(connection.cloneAndConnect(child.nodes));
+			}
+				
+		}
+		
+		for (Node node: child.nodes) {
+			Connection connection = child.getConnectionByInnovationNumber(node.getSplitInnovationNumber());
+			if (connection != null)
+				connection.setNodeAddable(false);
+		}
+		
+		for (Node node: child.nodes)
+			node.updateSelfRecurrentConnection();
+
+		child.setNodesByType();
+		child.handleIsolatedNodes();
+		child.updateLayers();
+				
+		return child;
+	}
+	
+	@Override
+	protected Genome clone() {
+		Genome clone = new Genome(neatConfig, false);
+						
+		for (Node node: nodes)
+			clone.nodes.add(node.clone());
+		
+		for (Connection connection: connections)
+			clone.connections.add(connection.cloneAndConnect(clone.nodes));
+		
+		for (Node node: clone.nodes)
+			node.updateSelfRecurrentConnection();
+		
+		clone.maxInnovationNumber = maxInnovationNumber;
+		clone.numOfHiddenlayers = numOfHiddenlayers;
+		clone.setNodesByType();
+		clone.setNodesByLayer();
+		
+		return clone;
+	}
+	
+	@Override
+	public String toString() {
+		String res = String.format("%d Connections, %d Nodes, %d layers.\n",
+				connections.size(),
+				nodes.size(),
+				numOfHiddenlayers+2);
+		for (Connection connection: connections)
+			res += connection + "\n";
+		res += "||\n";
+		for (Node node: nodes)
+			res += node + "\n";
+		
+		return res;
+	}
+	
+	private void testConnections(String label) {
+		
+		for (Connection connection: connections) {
+			if (!nodes.contains(connection.getFrom()) || !nodes.contains(connection.getTo())) {
+				System.out.println("[" + label + "] Connection has no source or destination!");
+				System.exit(0);
+			}
+		}
+		
+	}
+	
+	private void testDuplicateNodes(String label) {
+		for (Node node: nodes) {
+			if (nodes.indexOf(node) != nodes.lastIndexOf(node)) {
+				System.out.println("[" + label + "] " + "Duplicate node!");
+				System.exit(0);
+			}
+		}
+	}
+	
+	private void testDuplicateConnections(String label) {
+		for (Connection connection: connections) {
+			if (connections.indexOf(connection) != connections.lastIndexOf(connection)) {
+				System.out.println("[" + label + "] " + "Duplicate connection!");
+				System.exit(0);
+			}
+		}
+	}
+	
+	private void testHasRecurrentConnections(String label) {
+		
+		boolean has = false;
+		String output = "";
+		for (Connection connection: connections)
+			if (connection.getFrom().getLayer() >= connection.getTo().getLayer()) {
+				output += connection + "\n";
+				has = true;
+			}
+		
+		if (has)
+			output = label + "\n" + output + "------------\n";
+		else output = "";
+		
+		System.out.print(output);
+		if (has)
+			System.exit(0);
+	}
+	
+	private void testHasViceVersaConnections(String label) {
+		
+		String output = "";
+		for (Connection connection: connections) {
+			Connection con = getConnection(connection.getTo(), connection.getFrom());
+			if (con != null)
+				output += label + " " + con + "\n";
+		}
+		
+		if (!output.isEmpty()) {
+			System.out.println(output);
+			System.exit(0);
+		}
+		
+	}
+	
+	public static class GenomeVisualizationData {
+		
+		public static HashMap<Node, double[]> getNodesCoordinates(Genome genome, int width, int height, double nodeSize) {
+            return genome.getNodesCoordinates(width, height, nodeSize);
+        }
+		
+	}
+	
+}
