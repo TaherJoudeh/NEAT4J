@@ -14,7 +14,7 @@
    - ***GenomeVisualizer***: Capture/Visualize neural network topologies.
    - ***GenomeVisualizerBuilder***: Customize visualization styles.
 4. ### I/O Utilities
-   - ***GenomeFileHandler***: Save/load genomes in Java serializing format.
+   - ***GenomeFileHandler***: Save/load genomes in Java serialization format.
 5. ### Pre-Built Functions
    - Activation functions: _**Sigmoid**_, _**ReLU**_, _**Tanh**_, _**Step**_, _**Linear**_.
    - Aggregation functions: _**Sum**_, _**Product**_, **Min**_, **Max**_, **Mean**_, **Median**_, **Maxabs**_.
