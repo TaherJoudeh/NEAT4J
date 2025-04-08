@@ -28,7 +28,7 @@
    	```java
 	NEATConfig config = new NEATConfigBuilder(50, 2, 1).build();
 	```
-   The parameters of the NEATConfigBuilder constructor are:
+   The parameters of the ***NEATConfigBuilder*** constructor are:
       - First parameter: Population size.
       - Second parameter: Number of input nodes.
       - Third parameter: Number of output nodes.
