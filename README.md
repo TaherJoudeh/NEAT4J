@@ -25,13 +25,14 @@
    `git clone https://github.com/TaherJoudeh/NEAT4J`
 ## Quick Start
 1. Configure NEAT
-   ```java
-   NEATConfig config = new NEATConfigBuilder(50, 2, 1).build();
-   ```
+   	```java
+	NEATConfig config = new NEATConfigBuilder(50, 2, 1).build();
+	```
    The parameters of the NEATConfigBuilder constructor are:
       - First parameter: Population size.
       - Second parameter: Number of input nodes.
       - Third parameter: Number of output nodes.
+
    If you want to modify and configure Activations and Aggregations to your liking, you can:
    ```java
    ActivationConfig activationConfig = new ActivationConfigBuilder()
