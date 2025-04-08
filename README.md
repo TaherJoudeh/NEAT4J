@@ -82,6 +82,15 @@
    ```
    
 ## Project Structure
+  - src/main/java/neat/
+    * core ***-->*** Core NEAT logic (Agent, Genome, Node, Connection).
+    * config ***-->*** Configuration classes (NEATConfig, ActivationConfig).
+    * functions ***-->*** Activation/Aggregation function implementations.
+    * io ***-->*** File I/O utilities (GenomeFileHandler).
+    * visualization ***-->*** Visualization tools.
+  - src/main/java/test/
+    * xor ***-->*** Test for solving XOR logic gate.
+
 ## Examples
 1. Solving the XOR logic gate.
 ## Acknowledgments
