@@ -81,13 +81,7 @@
    System.out.println("0 - " + output1[0] + "\n1 - " + output2[0] + "\n1 - " + output3[0] + "\n0 - " + output4[0]
 		+ "\n-------------------");
    ```
-4. ### Capture the best genome (OPTIONAL)
-   ```java
-   GenomeFileHandler.saveImage(GenomeVisualizer.visualizeGenome(visualizer, "#000000", true, true, best.getGenome(), neatConfig.getWeightMaxValue(), 500, 500)
-			,"src\\main\\java\\test"
-			,"xor"
-			,"png");
-   ```
+   
 ## Project Structure
 ## Examples
 1. Solving the XOR logic gate.
