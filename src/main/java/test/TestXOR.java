@@ -16,7 +16,7 @@ public class TestXOR {
 
 	public static void main(String[] args) {
 		
-		NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1)
+		NEATConfig neatConfig = new NEATConfigBuilder(150, 2, 1)
 				.setStructuralMutationAdvisor(false)
 				.setSingleStructuralMutation(false)
 				.setMaxNumberOfHiddenNodes(1)
