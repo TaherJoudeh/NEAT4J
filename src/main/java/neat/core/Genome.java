@@ -423,8 +423,6 @@ public class Genome implements Serializable {
 		handleRecurrentConnections();
 		numOfHiddenlayers = max;
 		setNodesByLayer();
-//		System.out.println("InputSize: " + inputNodes.size() + "\n" + this + "\n---------------------------");
-		testConnections("[After updateLayers]");
 		
 	}
 	
