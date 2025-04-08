@@ -36,11 +36,11 @@
    If you want to modify and configure Activations and Aggregations to your liking, you can:
    ```java
    ActivationConfig activationConfig = new ActivationConfigBuilder()
-				.addActivationFunction(ACTIVATION_FUNCTION.SIGMOID)
-				.setLinearActivationThreshold(0.5d)
-				.build();
-		AggregationConfig aggregationConfig = new AggregationConfig(AGGREGATION_FUNCTION.SUM);
-		NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1, aggregationConfig, activationConfig).build();
+		.addActivationFunction(ACTIVATION_FUNCTION.SIGMOID)
+		.setLinearActivationThreshold(0.5d)
+		.build();
+   AggregationConfig aggregationConfig = new AggregationConfig(AGGREGATION_FUNCTION.SUM);
+   NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1, aggregationConfig, activationConfig).build();
    ```
 3. Initialize Neat
    ```java
@@ -50,42 +50,43 @@
    ```java
    Agent[] agents = neat.getPopulation();
    double[][] inputs = {
-				{0,0}, // -> 0
-				{0,1}, // -> 1
-				{1,0}, // -> 1
-				{1,1}  // -> 0
-		};
-		Agent[] agents = neat.getPopulation();
-		while (!neat.isFoundSolution()) {
-			for (int i = 0; i < neatConfig.getPopulationSize(); i++) {
-				double[] output1 = agents[i].think(inputs[0]);
-				double[] output2 = agents[i].think(inputs[1]);
-				double[] output3 = agents[i].think(inputs[2]);
-				double[] output4 = agents[i].think(inputs[3]);
-				double fitness = Math.pow((1-output1[0]),2) +
-						Math.pow(output2[0],2) +
-						Math.pow(output3[0],2) +
-						Math.pow((1-output4[0]),2);
-				agents[i].setFitness(
-						fitness
-						);
-			}
-			neat.evolve(true);
-		}
-      Agent best = neat.getBest();
-		double[] output1 = best.think(inputs[0]);
-		double[] output2 = best.think(inputs[1]);
-		double[] output3 = best.think(inputs[2]);
-		double[] output4 = best.think(inputs[3]);
-		System.out.println("0 - " + output1[0] + "\n1 - " + output2[0] + "\n1 - " + output3[0] + "\n0 - " + output4[0]
-				+ "\n-------------------");
+		{0,0}, // -> 0
+		{0,1}, // -> 1
+		{1,0}, // -> 1
+		{1,1}  // -> 0
+   };
+   
+   Agent[] agents = neat.getPopulation();
+   while (!neat.isFoundSolution()) {
+   	for (int i = 0; i < neatConfig.getPopulationSize(); i++) {
+		double[] output1 = agents[i].think(inputs[0]);
+		double[] output2 = agents[i].think(inputs[1]);
+		double[] output3 = agents[i].think(inputs[2]);
+		double[] output4 = agents[i].think(inputs[3]);
+		double fitness = Math.pow((1-output1[0]),2) +
+			Math.pow(output2[0],2) +
+			Math.pow(output3[0],2) +
+			Math.pow((1-output4[0]),2);
+   
+			agents[i].setFitness(fitness);
+	}
+	neat.evolve(true);
+   }
+   
+   Agent best = neat.getBest();
+   double[] output1 = best.think(inputs[0]);
+   double[] output2 = best.think(inputs[1]);
+   double[] output3 = best.think(inputs[2]);
+   double[] output4 = best.think(inputs[3]);
+   System.out.println("0 - " + output1[0] + "\n1 - " + output2[0] + "\n1 - " + output3[0] + "\n0 - " + output4[0]
+		+ "\n-------------------");
    ```
 6. Capture the best genome (OPTIONAL)
    ```java
    GenomeFileHandler.saveImage(GenomeVisualizer.visualizeGenome(visualizer, "#000000", true, true, best.getGenome(), neatConfig.getWeightMaxValue(), 500, 500)
-				,"src\\main\\java\\test"
-				,"xor"
-				,"png");
+			,"src\\main\\java\\test"
+			,"xor"
+			,"png");
    ```
 ## Project Structure
 ## Examples
