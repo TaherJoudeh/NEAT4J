@@ -1,4 +1,4 @@
-package main.java.test;
+package main.java.test.xor;
 
 import main.java.neat.config.NEATConfig;
 import main.java.neat.config.NEATConfig.CONNECTIVITY;
@@ -111,9 +111,11 @@ public class TestXOR {
 				+ "\n-------------------");
 		
 		GenomeFileHandler.saveImage(GenomeVisualizer.visualizeGenome(visualizer, "#000000", true, true, best.getGenome(), neatConfig.getWeightMaxValue(), 500, 500)
-				,"src\\main\\java\\test"
+				,"src\\main\\java\\test\\xor"
 				,"xor"
 				,"png");
+		
+		GenomeFileHandler.saveGenome(best.getGenome(), "src\\main\\java\\test\\xor", "best");
 		
 	}
 	
