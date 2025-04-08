@@ -40,7 +40,7 @@
 				.setLinearActivationThreshold(0.5d)
 				.build();
 		AggregationConfig aggregationConfig = new AggregationConfig(AGGREGATION_FUNCTION.SUM);
-		NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1, activationConfig, aggregationConfig).build();
+		NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1, aggregationConfig, activationConfig).build();
    ```
 3. Initialize Neat
    ```java
