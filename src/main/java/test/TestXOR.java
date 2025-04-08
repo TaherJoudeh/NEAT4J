@@ -1,8 +1,5 @@
 package main.java.test;
 
-import main.java.neat.config.ActivationConfig;
-import main.java.neat.config.ActivationConfigBuilder;
-import main.java.neat.config.AggregationConfig;
 import main.java.neat.config.NEATConfig;
 import main.java.neat.config.NEATConfig.CONNECTIVITY;
 import main.java.neat.config.NEATConfig.FITNESS_CRITERION;
@@ -11,7 +8,6 @@ import main.java.neat.config.NEATConfig.SPECIES_FITNESS_FUNCTION;
 import main.java.neat.config.NEATConfigBuilder;
 import main.java.neat.core.Agent;
 import main.java.neat.core.Neat;
-import main.java.neat.functions.AggregationFunction.AGGREGATION_FUNCTION;
 import main.java.neat.io.GenomeFileHandler;
 import main.java.neat.visualizer.GenomeVisualizer;
 import main.java.neat.visualizer.GenomeVisualizerBuilder;
@@ -20,9 +16,7 @@ public class TestXOR {
 
 	public static void main(String[] args) {
 		
-		ActivationConfig actConfig = new ActivationConfigBuilder().build();
-		AggregationConfig aggConfig = new AggregationConfig(AGGREGATION_FUNCTION.SUM);
-		NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1, aggConfig, actConfig)
+		NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1)
 				.setStructuralMutationAdvisor(false)
 				.setSingleStructuralMutation(false)
 				.setMaxNumberOfHiddenNodes(1)
