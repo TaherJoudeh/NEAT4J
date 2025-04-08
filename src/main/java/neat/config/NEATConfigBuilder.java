@@ -7,6 +7,7 @@ import main.java.neat.config.NEATConfig.SELECTION_TYPE;
 import main.java.neat.config.NEATConfig.SPECIES_FITNESS_FUNCTION;
 import main.java.neat.functions.ActivationFunction;
 import main.java.neat.functions.AggregationFunction;
+import main.java.neat.functions.AggregationFunction.AGGREGATION_FUNCTION;
 
 /**
  * 
@@ -16,6 +17,12 @@ import main.java.neat.functions.AggregationFunction;
 public class NEATConfigBuilder {
 	
 	private NEATConfig neatConfig;
+	
+	public NEATConfigBuilder(int populationSize, int numberOfInputs, int numberOfOutputs) {
+		neatConfig = new NEATConfig(populationSize, numberOfInputs, numberOfOutputs,
+				new AggregationConfig(AGGREGATION_FUNCTION.SUM),
+				new ActivationConfig());
+	}
 	
 	/**
 	 * 

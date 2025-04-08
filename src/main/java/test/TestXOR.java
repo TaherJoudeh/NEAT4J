@@ -11,8 +11,6 @@ import main.java.neat.config.NEATConfig.SPECIES_FITNESS_FUNCTION;
 import main.java.neat.config.NEATConfigBuilder;
 import main.java.neat.core.Agent;
 import main.java.neat.core.Neat;
-import main.java.neat.functions.ActivationFunction.ACTIVATION_FUNCTION;
-import main.java.neat.functions.AggregationFunction.AGGREGATION_FUNCTION;
 import main.java.neat.io.GenomeFileHandler;
 import main.java.neat.visualizer.GenomeVisualizer;
 import main.java.neat.visualizer.GenomeVisualizerBuilder;
@@ -21,13 +19,7 @@ public class TestXOR {
 
 	public static void main(String[] args) {
 		
-		ActivationConfig activationConfig = new ActivationConfigBuilder()
-				.addActivationFunction(ACTIVATION_FUNCTION.SIGMOID)
-				.setLinearActivationThreshold(0.5d)
-				.build();
-		AggregationConfig aggregationConfig = new AggregationConfig(AGGREGATION_FUNCTION.SUM);
-		
-		NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1, aggregationConfig, activationConfig)
+		NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1)
 				.setStructuralMutationAdvisor(false)
 				.setSingleStructuralMutation(false)
 				.setMaxNumberOfHiddenNodes(1)
@@ -82,7 +74,6 @@ public class TestXOR {
 		GenomeVisualizer visualizer = new GenomeVisualizerBuilder().defaultGenomeVisuals().build();
 
 		Neat neat = new Neat(neatConfig);
-		Agent[] agents = new Agent[neatConfig.getPopulationSize()];
 		
 		double[][] inputs = {
 				{0,0}, // -> 0
@@ -91,7 +82,7 @@ public class TestXOR {
 				{1,1}  // -> 0
 		};
 		
-		neat.initAgents(agents);
+		Agent[] agents = neat.getPopulation();
 		
 		while (!neat.isFoundSolution()) {
 			for (int i = 0; i < neatConfig.getPopulationSize(); i++) {

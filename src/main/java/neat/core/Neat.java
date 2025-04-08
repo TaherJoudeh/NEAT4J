@@ -44,7 +44,7 @@ public class Neat {
 	}
 	
 	private void init() {
-		population = new Agent[this.neatConfig.getPopulationSize()];
+		population = new Agent[this.neatConfig.getPopulationSize()];		
 		species = new LinkedList<> ();
 		
 		switch (neatConfig.getSpeciesFitnessFunction()) {
@@ -71,6 +71,8 @@ public class Neat {
 				fitnessCriterion = AggregationFunction.getAggregationFunction(AGGREGATION_FUNCTION.MIN);
 				break;
 			}
+		
+		initAgents();
 	}
 	
 	/**
@@ -82,7 +84,7 @@ public class Neat {
 	/**
 	 * 
 	 * @param agents
-	 */
+	 
 	public void initAgents(Agent[] agents) {
 		if (agents.length != neatConfig.getPopulationSize())
 			throw new IllegalArgumentException("Error: The length of 'agents' array is not equal to population size parameter.\n");
@@ -90,6 +92,12 @@ public class Neat {
 			agents[i] = new Agent(neatConfig);
 			population[i] = agents[i];
 		}
+		speciate();
+	}*/
+	
+	private void initAgents() {
+		for (int i = 0; i < neatConfig.getPopulationSize(); i++)
+			population[i] = new Agent(neatConfig);
 		speciate();
 	}
 	

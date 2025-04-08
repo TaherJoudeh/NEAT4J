@@ -47,8 +47,22 @@ public class ActivationConfig implements Serializable {
 			allowedActivationFunctions.add(activationFunction);
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public ArrayList<ACTIVATION_FUNCTION> getAllowedActivationFunctions() {
 		return allowedActivationFunctions;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static ActivationConfig defaultActivationConfig() {
+		ActivationConfig actConfig = new ActivationConfig();
+		actConfig.addActivationFunction(ACTIVATION_FUNCTION.SIGMOID);
+		return actConfig;
 	}
 	
 }

@@ -2,7 +2,6 @@ package main.java.neat.config;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import main.java.neat.functions.AggregationFunction;
 import main.java.neat.functions.AggregationFunction.AGGREGATION_FUNCTION;
 
@@ -52,6 +51,14 @@ public class AggregationConfig implements Serializable {
 		int numOfAggFuncs = AGGREGATION_FUNCTION.values().length-1;
 		return AggregationFunction.getAggregationFunction(AGGREGATION_FUNCTION.values()[(int)(Math.random()*numOfAggFuncs)]);
 		
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static AggregationConfig defaultAggregationConfig() {
+		return new AggregationConfig(AGGREGATION_FUNCTION.SUM);
 	}
 	
 }
