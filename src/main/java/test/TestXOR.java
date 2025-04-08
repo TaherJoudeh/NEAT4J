@@ -11,6 +11,7 @@ import main.java.neat.config.NEATConfig.SPECIES_FITNESS_FUNCTION;
 import main.java.neat.config.NEATConfigBuilder;
 import main.java.neat.core.Agent;
 import main.java.neat.core.Neat;
+import main.java.neat.functions.AggregationFunction.AGGREGATION_FUNCTION;
 import main.java.neat.io.GenomeFileHandler;
 import main.java.neat.visualizer.GenomeVisualizer;
 import main.java.neat.visualizer.GenomeVisualizerBuilder;
@@ -19,7 +20,9 @@ public class TestXOR {
 
 	public static void main(String[] args) {
 		
-		NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1)
+		ActivationConfig actConfig = new ActivationConfigBuilder().build();
+		AggregationConfig aggConfig = new AggregationConfig(AGGREGATION_FUNCTION.SUM);
+		NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1, aggConfig, actConfig)
 				.setStructuralMutationAdvisor(false)
 				.setSingleStructuralMutation(false)
 				.setMaxNumberOfHiddenNodes(1)
