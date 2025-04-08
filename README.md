@@ -90,9 +90,7 @@
     * visualization ***-->*** Visualization tools.
   - src/main/java/test/
     * xor ***-->*** Test for solving XOR logic gate.
-
-## Examples
-1. Solving the XOR logic gate.
+      
 ## Acknowledgments
    - Kenneth O. Stanley and Risto Miikkulainen [Original NEAT paper](https://nn.cs.utexas.edu/downloads/papers/stanley.cec02.pdf).
    - [NEAT-Python](https://neat-python.readthedocs.io/en/latest/index.html).
