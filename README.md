@@ -48,7 +48,6 @@
    ```
 3. ### Run the algorithm
    ```java
-   Agent[] agents = neat.getPopulation();
    double[][] inputs = {
 		{0,0}, // -> 0
 		{0,1}, // -> 1
