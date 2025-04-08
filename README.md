@@ -2,29 +2,29 @@
 **NEAT4J** is a Java implementation of the NeuroEvolution of Augmenting Topologies (NEAT) algorithm, designed to evolve artificial neural networks through genetic algorithms. This project provides a modular, configurable framework for experimenting with NEAT, including visualization, file I/O, and pre-built configurations.
 
 ## Features
-1. Core NEAT Algorithm
+1. ### Core NEAT Algorithm
    - Genome encoding for nodes and connections.
    - Speciation, crossover, and mutation operations.
    - Dynamic topology evolution (add/remove nodes/connections).
-2. Configuration
+2. ### Configuration
    - ***NEATConfig***: Centralized settings for population size, mutation rates, etc.
    - ***NEATConfigBuilder***: Fluent API for custom configurations.
    - ***ActivationConfig and AggregationConfig***: Define activation/aggregation functions.
-3. Visualization
+3. ### Visualization
    - ***GenomeVisualizer***: Capture/Visualize neural network topologies.
    - ***GenomeVisualizerBuilder***: Customize visualization styles.
-4. I/O Utilities
+4. ### I/O Utilities
    - ***GenomeFileHandler***: Save/load genomes in Java serializing format.
-5. Pre-Built Functions
+5. ### Pre-Built Functions
    - Activation functions: _**Sigmoid**_, _**ReLU**_, _**Tanh**_, _**Step**_, _**Linear**_.
    - Aggregation functions: _**Sum**_, _**Product**_, **Min**_, **Max**_, **Mean**_, **Median**_, **Maxabs**_.
-6. Testing
+6. ### Testing
    - Example: ***TestXOR*** demonstrates evolving a network to solve XOR.
 ## Installation
 - Clone the Repository:
    `git clone https://github.com/TaherJoudeh/NEAT4J`
 ## Quick Start
-1. Configure NEAT
+1. ### Configure NEAT
    	```java
 	NEATConfig config = new NEATConfigBuilder(50, 2, 1).build();
 	```
@@ -42,11 +42,11 @@
    AggregationConfig aggregationConfig = new AggregationConfig(AGGREGATION_FUNCTION.SUM);
    NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1, aggregationConfig, activationConfig).build();
    ```
-3. Initialize Neat
+2. ### Initialize Neat
    ```java
    Neat neat = new Neat(neatConfig);
    ```
-5. Run the algorithm
+3. ### Run the algorithm
    ```java
    Agent[] agents = neat.getPopulation();
    double[][] inputs = {
@@ -81,7 +81,7 @@
    System.out.println("0 - " + output1[0] + "\n1 - " + output2[0] + "\n1 - " + output3[0] + "\n0 - " + output4[0]
 		+ "\n-------------------");
    ```
-6. Capture the best genome (OPTIONAL)
+4. ### Capture the best genome (OPTIONAL)
    ```java
    GenomeFileHandler.saveImage(GenomeVisualizer.visualizeGenome(visualizer, "#000000", true, true, best.getGenome(), neatConfig.getWeightMaxValue(), 500, 500)
 			,"src\\main\\java\\test"
