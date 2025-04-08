@@ -25,22 +25,29 @@
    `git clone https://github.com/TaherJoudeh/NEAT4J`
 ## Quick Start
 1. Configure NEAT
-   `NEATConfig config = new NEATConfigBuilder(50, 2, 1).build();`
+   ```java
+   NEATConfig config = new NEATConfigBuilder(50, 2, 1).build();
+   ```
    The parameters of the NEATConfigBuilder constructor are:
       - First parameter: Population size.
       - Second parameter: Number of input nodes.
       - Third parameter: Number of output nodes.
    If you want to modify and configure Activations and Aggregations to your liking, you can:
-   `ActivationConfig activationConfig = new ActivationConfigBuilder()
+   ```java
+   ActivationConfig activationConfig = new ActivationConfigBuilder()
 				.addActivationFunction(ACTIVATION_FUNCTION.SIGMOID)
 				.setLinearActivationThreshold(0.5d)
 				.build();
 		AggregationConfig aggregationConfig = new AggregationConfig(AGGREGATION_FUNCTION.SUM);
-		NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1, activationConfig, aggregationConfig).build();`
-2. Initialize Neat
-   `Neat neat = new Neat(neatConfig);`
-3. Run the algorithm
-   `Agent[] agents = neat.getPopulation();
+		NEATConfig neatConfig = new NEATConfigBuilder(50, 2, 1, activationConfig, aggregationConfig).build();
+   ```
+3. Initialize Neat
+   ```java
+   Neat neat = new Neat(neatConfig);
+   ```
+5. Run the algorithm
+   ```java
+   Agent[] agents = neat.getPopulation();
    double[][] inputs = {
 				{0,0}, // -> 0
 				{0,1}, // -> 1
@@ -70,12 +77,15 @@
 		double[] output3 = best.think(inputs[2]);
 		double[] output4 = best.think(inputs[3]);
 		System.out.println("0 - " + output1[0] + "\n1 - " + output2[0] + "\n1 - " + output3[0] + "\n0 - " + output4[0]
-				+ "\n-------------------");`
-4. Capture the best genome (OPTIONAL)
-   `GenomeFileHandler.saveImage(GenomeVisualizer.visualizeGenome(visualizer, "#000000", true, true, best.getGenome(), neatConfig.getWeightMaxValue(), 500, 500)
+				+ "\n-------------------");
+   ```
+6. Capture the best genome (OPTIONAL)
+   ```java
+   GenomeFileHandler.saveImage(GenomeVisualizer.visualizeGenome(visualizer, "#000000", true, true, best.getGenome(), neatConfig.getWeightMaxValue(), 500, 500)
 				,"src\\main\\java\\test"
 				,"xor"
-				,"png");`
+				,"png");
+   ```
 ## Project Structure
 ## Examples
 1. Solving the XOR logic gate.
