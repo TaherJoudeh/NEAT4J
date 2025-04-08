@@ -20,8 +20,8 @@ public class NEATConfigBuilder {
 	
 	public NEATConfigBuilder(int populationSize, int numberOfInputs, int numberOfOutputs) {
 		neatConfig = new NEATConfig(populationSize, numberOfInputs, numberOfOutputs,
-				new AggregationConfig(AGGREGATION_FUNCTION.SUM),
-				new ActivationConfig());
+				AggregationConfig.defaultAggregationConfig(),
+				ActivationConfig.defaultActivationConfig());
 	}
 	
 	/**
