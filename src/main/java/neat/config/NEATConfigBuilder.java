@@ -554,8 +554,6 @@ public class NEATConfigBuilder {
 	
     /**
      * Sets the standard deviation for initializing node bias values.
-     * 
-     * Used when bias initialization type is NORMAL.
      * Default value is 1.
      * 
      * @param biasInitStdev The bias initialization standard deviation. If less than zero, the new value will not be set.
@@ -845,8 +843,6 @@ public class NEATConfigBuilder {
 	
     /**
      * Sets the standard deviation for initializing node response values.
-     * 
-     * Used when response initialization type is NORMAL.
      * Default value is 0.
      * 
      * @param responseInitStdev The response initialization standard deviation. If less than zero, the new value will not be set.
@@ -1002,8 +998,6 @@ public class NEATConfigBuilder {
 	
     /**
      * Sets the standard deviation for initializing connection weight values.
-     * 
-     * Used when weight initialization type is NORMAL.
      * Default value is 1.
      * 
      * @param weightInitStdev The weight initialization standard deviation. If less than zero, the new value will not be set.
