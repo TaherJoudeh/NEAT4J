@@ -26,8 +26,10 @@ public final class GenomeFileHandler {
 	 * @param name
 	 */
 	public final static void saveGenome(Genome genome, String path, String name) {
-		String fullPath = path+"\\"+name+"."+FILE_FORMAT;
-		File file = new File(fullPath);
+		String filePath = path+"\\"+name+"."+FILE_FORMAT;
+		if (path == null)
+			filePath = name + "." + FILE_FORMAT;
+		File file = new File(filePath);
 		try {
 			
 			FileOutputStream fos = new FileOutputStream(file);

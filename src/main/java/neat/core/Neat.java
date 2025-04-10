@@ -10,11 +10,16 @@ import main.java.neat.functions.AggregationFunction.AGGREGATION_FUNCTION;
 
 /**
  * 
- * @author Gamer
+ * @author Taher Joudeh
  *
  */
 public class Neat {
 
+	private final static int RUNNING = 0, GENERATION_TERMINATION = 1, FITNESS_TERMINATION = 2;
+	private final String GENERATION_TERMINATION_MESSAGE,
+			FITNESS_TERMINATION_MESSAGE;
+	private int state = RUNNING;
+	
 	private NEATConfig neatConfig;
 	private Agent[] population;
 	private Agent best, currentBest;
@@ -24,27 +29,27 @@ public class Neat {
 	private AggregationFunction speciesFitnessFunction;
 	private AggregationFunction fitnessCriterion;
 	
-	private double compatabilityThreshold, compatabilityThresholdAdjustingFactor, targetNumberOfSpecies;
+	private double compatabilityThreshold;
 	private int generation = 1;
 	private double populationFitness;
 	private double populationAdjustedFitness;
-	
-	private boolean foundSolution;
-	
+		
 	/**
 	 * 
 	 * @param neatConfig
 	 */
 	public Neat(NEATConfig neatConfig) {
 		this.neatConfig = neatConfig;
+		
+		GENERATION_TERMINATION_MESSAGE = "Terminated due to reaching the generation threshold [generationThreshold: " + neatConfig.getGenerationThreshold() + "]";
+		FITNESS_TERMINATION_MESSAGE = "Terminated due to reaching the fitness threshold [fitnessThreshold: " + neatConfig.getFitnessThreshold() + "]";
+		
 		this.compatabilityThreshold = neatConfig.getCompatabilityThreshold();
-		this.compatabilityThresholdAdjustingFactor = neatConfig.getCompatabilityThresholdAdjustingFactor();
-		this.targetNumberOfSpecies = neatConfig.getTargetNumberOfSpecies();
 		init();
 	}
 	
 	private void init() {
-		population = new Agent[this.neatConfig.getPopulationSize()];		
+		population = new Agent[this.neatConfig.getPopulationSize()];
 		species = new LinkedList<> ();
 		
 		switch (neatConfig.getSpeciesFitnessFunction()) {
@@ -80,21 +85,7 @@ public class Neat {
 	 * @return
 	 */
 	public Agent getBest() { return best; }
-	
-	/**
-	 * 
-	 * @param agents
-	 
-	public void initAgents(Agent[] agents) {
-		if (agents.length != neatConfig.getPopulationSize())
-			throw new IllegalArgumentException("Error: The length of 'agents' array is not equal to population size parameter.\n");
-		for (int i = 0; i < neatConfig.getPopulationSize(); i++) {
-			agents[i] = new Agent(neatConfig);
-			population[i] = agents[i];
-		}
-		speciate();
-	}*/
-	
+
 	private void initAgents() {
 		for (int i = 0; i < neatConfig.getPopulationSize(); i++)
 			population[i] = new Agent(neatConfig);
@@ -104,18 +95,17 @@ public class Neat {
 	public Agent[] getPopulation() { return population; }
 	public int getGeneration() { return generation; }
 	public double getPopulationFitness() { return populationFitness; }
-	public boolean isFoundSolution() { return foundSolution; }
+	public boolean isTerminated() { return state != RUNNING; }
 	public int getNumberOfSpecies() { return species.size(); }
+	public double getCurrentCompatabilityThreshold() { return compatabilityThreshold; }
 
-	private void foundSolution() {
+	private int terminationCheck() {
 		
-		if (foundSolution || (!neatConfig.isGenerationTermination() && !neatConfig.isFitnessTermination()))
-			return;
+		if (state != RUNNING || (!neatConfig.isGenerationTermination() && !neatConfig.isFitnessTermination()))
+			return state;
 		
-		if (neatConfig.isGenerationTermination() && generation >= neatConfig.getGenerationThreshold()) {
-			foundSolution = true;
-			return;
-		}
+		if (neatConfig.isGenerationTermination() && generation >= neatConfig.getGenerationThreshold())
+			return GENERATION_TERMINATION;
 		if (neatConfig.isFitnessTermination()) {
 			double[] fitness = new double[neatConfig.getPopulationSize()];
 			for (int i = 0; i < neatConfig.getPopulationSize(); i++)
@@ -125,18 +115,18 @@ public class Neat {
 					||
 				(neatConfig.getFitnessCriterion() == FITNESS_CRITERION.MIN &&
 					fitnessCriterion.aggregate(fitness) <= neatConfig.getFitnessThreshold())) {
-				foundSolution = true;
-				return;
+				return FITNESS_TERMINATION;
 			}
 		}
 		
+		return RUNNING;
 	}
 	
 	/**
 	 * 
 	 * @param print
 	 */
-	public void evolve(boolean print) {
+	public void evolve(boolean printLastGenerationInfo) {
 		
 		int numberOfSpecs = species.size();
 		if (neatConfig.isDynamicCompatabilityThreshold())
@@ -150,12 +140,14 @@ public class Neat {
 		
 		getCurrentBest();
 		
-		if (print)
+		if (printLastGenerationInfo)
 			System.out.println("Generation: " + generation + " - " + populationFitness + " - [BEST: " + currentBest.getFitness() + "] | " + numberOfSpecs);
 				
-		foundSolution();
-		if (foundSolution) {
-			System.out.println("Solution is found!");
+		state = terminationCheck();
+		if (state != RUNNING) {
+			if (state == GENERATION_TERMINATION)
+				System.out.println(GENERATION_TERMINATION_MESSAGE);
+			else System.out.println(FITNESS_TERMINATION_MESSAGE);
 			return;
 		}
 		
@@ -328,10 +320,10 @@ public class Neat {
 	
 	private void adjustCompatabilityThreshold() {
 		int numberOfSpecies = species.size();
-		if (numberOfSpecies > targetNumberOfSpecies)
-			compatabilityThreshold *= (1+compatabilityThresholdAdjustingFactor);
-		if (numberOfSpecies < targetNumberOfSpecies)
-			compatabilityThreshold *= (1-compatabilityThresholdAdjustingFactor);
+		if (numberOfSpecies > neatConfig.getTargetNumberOfSpecies())
+			compatabilityThreshold *= (1+neatConfig.getCompatabilityThresholdAdjustingFactor());
+		if (numberOfSpecies < neatConfig.getTargetNumberOfSpecies())
+			compatabilityThreshold *= (1-neatConfig.getCompatabilityThresholdAdjustingFactor());
 	}
 	
 	private class Species {

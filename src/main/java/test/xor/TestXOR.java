@@ -31,10 +31,11 @@ public class TestXOR {
 				.setTargetNumberOfSpecies(20)
 				.setSpeciesFitnessFunction(SPECIES_FITNESS_FUNCTION.MAX)
 				.setFitnessCriterion(FITNESS_CRITERION.MAX)
+				
 				.setFitnessTermination(true)
 				.setGenerationTermination(false)
-				.setGenerationThreshold(1)
-				.setFitnessThreshold(3.9)
+				.setGenerationTerminationThreshold(100)
+				.setFitnessTerminationThreshold(3.9)
 				
 				.setProbAddConnection(0.1)
 //				.setProbDeleteConnection(0.5)
@@ -81,7 +82,7 @@ public class TestXOR {
 		
 		Agent[] agents = neat.getPopulation();
 		
-		while (!neat.isFoundSolution()) {
+		while (!neat.isTerminated()) {
 			for (int i = 0; i < neatConfig.getPopulationSize(); i++) {
 				double[] output1 = agents[i].think(inputs[0]);
 				double[] output2 = agents[i].think(inputs[1]);

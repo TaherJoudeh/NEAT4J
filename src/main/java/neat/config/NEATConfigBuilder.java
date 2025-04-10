@@ -7,11 +7,10 @@ import main.java.neat.config.NEATConfig.SELECTION_TYPE;
 import main.java.neat.config.NEATConfig.SPECIES_FITNESS_FUNCTION;
 import main.java.neat.functions.ActivationFunction;
 import main.java.neat.functions.AggregationFunction;
-import main.java.neat.functions.AggregationFunction.AGGREGATION_FUNCTION;
 
 /**
  * 
- * @author Gamer
+ * @author Taher Joudeh
  *
  */
 public class NEATConfigBuilder {
@@ -69,7 +68,7 @@ public class NEATConfigBuilder {
 	 * @param fitnessThreshold
 	 * @return
 	 */
-	public NEATConfigBuilder setFitnessThreshold(double fitnessThreshold) {
+	public NEATConfigBuilder setFitnessTerminationThreshold(double fitnessThreshold) {
 		neatConfig.fitnessThreshold = Math.max(0, fitnessThreshold);
 		return this;
 	}
@@ -89,7 +88,7 @@ public class NEATConfigBuilder {
 	 * @param generationThreshold
 	 * @return
 	 */
-	public NEATConfigBuilder setGenerationThreshold(int generationThreshold) {
+	public NEATConfigBuilder setGenerationTerminationThreshold(int generationThreshold) {
 		neatConfig.generationThreshold = generationThreshold;
 		return this;
 	}
