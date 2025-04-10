@@ -46,9 +46,9 @@ public class NEATConfigBuilder {
      * This constructor initializes a NEATConfig with required parameters and 
      * default configurations for activation and aggregation functions.
      * 
-     * @param populationSize The size of the population (number of genomes), if less than 1, then keep it to the default value (1)
-     * @param numberOfInputs The number of input nodes in each network
-     * @param numberOfOutputs The number of output nodes in each network
+     * @param populationSize The size of the population (number of genomes), if less than 1, then keep it to the default value (1).
+     * @param numberOfInputs The number of input nodes in each network.
+     * @param numberOfOutputs The number of output nodes in each network.
      */
 	public NEATConfigBuilder(int populationSize, int numberOfInputs, int numberOfOutputs) {
 		neatConfig = new NEATConfig(populationSize, numberOfInputs, numberOfOutputs,
@@ -63,11 +63,11 @@ public class NEATConfigBuilder {
      * 
      * This constructor allows full customization of all initial configurations.
      * 
-     * @param populationSize The size of the population (number of genomes). If less than 1, then keep it to the default value (1)
-     * @param numberOfInputs The number of input nodes in each network
-     * @param numberOfOutputs The number of output nodes in each network
-     * @param aggregationConfig The custom aggregation function configuration
-     * @param activationConfig The custom activation function configuration
+     * @param populationSize The size of the population (number of genomes). If less than 1, then keep it to the default value (1).
+     * @param numberOfInputs The number of input nodes in each network.
+     * @param numberOfOutputs The number of output nodes in each network.
+     * @param aggregationConfig The custom aggregation function configuration.
+     * @param activationConfig The custom activation function configuration.
      */
 	public NEATConfigBuilder(int populationSize, int numberOfInputs, int numberOfOutputs,
 			AggregationConfig aggregationConfig, ActivationConfig activationConfig) {
@@ -80,8 +80,8 @@ public class NEATConfigBuilder {
      * This determines whether the algorithm aims to maximize or minimize fitness values.
      * Default value is MAX.
      * 
-     * @param fitnessCriterion The fitness criterion (MIN or MAX). If null, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param fitnessCriterion The fitness criterion (MIN or MAX). If null, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setFitnessCriterion(FITNESS_CRITERION fitnessCriterion) {
 		if (fitnessCriterion != null)
@@ -97,8 +97,8 @@ public class NEATConfigBuilder {
      * the threshold defined by setFitnessTerminationThreshold().
      * Default value is false.
      * 
-     * @param fitnessTermination true to enable fitness-based termination
-     * @return This builder instance for method chaining
+     * @param fitnessTermination true to enable fitness-based termination.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setFitnessTermination(boolean fitnessTermination) {
 		neatConfig.fitnessTermination = fitnessTermination;
@@ -112,8 +112,8 @@ public class NEATConfigBuilder {
      * (if fitness termination is enabled).
      * Default value is 0.
      * 
-     * @param fitnessThreshold The fitness threshold value. If less than zero, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param fitnessThreshold The fitness threshold value. If less than zero, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setFitnessTerminationThreshold(double fitnessThreshold) {
 		if (fitnessThreshold >= 0)
@@ -128,8 +128,8 @@ public class NEATConfigBuilder {
      * by setGenerationTerminationThreshold().
      * Default value is false.
      * 
-     * @param generationTermination true to enable generation-based termination
-     * @return This builder instance for method chaining
+     * @param generationTermination true to enable generation-based termination.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setGenerationTermination(boolean generationTermination) {
 		neatConfig.generationTermination = generationTermination;
@@ -142,8 +142,8 @@ public class NEATConfigBuilder {
      * Evolution stops after this many generations (if generation termination is enabled).
      * Default value is 0.
      * 
-     * @param generationThreshold The maximum number of generations to run. If less than 1, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param generationThreshold The maximum number of generations to run. If less than 1, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setGenerationTerminationThreshold(int generationThreshold) {
 		if (generationThreshold >= 1)
@@ -157,8 +157,8 @@ public class NEATConfigBuilder {
      * This affects which species are considered fit for reproduction and survival.
      * Default value is MEAN.
      * 
-     * @param speciesFitnessFunction The species fitness function (MIN, MAX, MEAN, or MEDIAN). If null, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param speciesFitnessFunction The species fitness function (MIN, MAX, MEAN, or MEDIAN). If null, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setSpeciesFitnessFunction(SPECIES_FITNESS_FUNCTION speciesFitnessFunction) {
 		if (speciesFitnessFunction != null)
@@ -172,8 +172,8 @@ public class NEATConfigBuilder {
      * Stagnant species may be eliminated to make room for innovation.
      * Default value is 15.
      * 
-     * @param stagnation The stagnation threshold in generations. If less than 1, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param stagnation The stagnation threshold in generations. If less than 1, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setStagnation(int stagnation) {
 		if (stagnation >= 1)
@@ -187,8 +187,8 @@ public class NEATConfigBuilder {
      * This ensures diversity by maintaining some historical lineages.
      * Default value is 0.
      * 
-     * @param speciesElitism The number of species protected from stagnation-based elimination. If less than zero, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param speciesElitism The number of species protected from stagnation-based elimination. If less than zero, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setSpeciesElitism(int speciesElitism) {
 		if (speciesElitism >= 0)
@@ -202,8 +202,8 @@ public class NEATConfigBuilder {
      * These elite genomes pass to the next generation without mutation.
      * Default value is 0.
      * 
-     * @param elitism The number of elite genomes preserved in each generation. If less than zero, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param elitism The number of elite genomes preserved in each generation. If less than zero, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setElitism(int elitism) {
 		if (elitism >= 0)
@@ -217,8 +217,8 @@ public class NEATConfigBuilder {
      * Only the top-performing genomes within this threshold reproduce.
      * Default value is 0.5.
      * 
-     * @param survivalThreshold The survival threshold as a fraction between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param survivalThreshold The survival threshold as a fraction between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setSurvivalThreshold(double survivalThreshold) {
 		if (survivalThreshold >= 0 && survivalThreshold <= 1)
@@ -232,8 +232,8 @@ public class NEATConfigBuilder {
      * Influences which genomes get to reproduce and how selection pressure is applied.
      * Default value is ROULETTE_WHEEL.
      * 
-     * @param selectionType The selection type (ROULETTE_WHEEL or TOURNAMENT). If null, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param selectionType The selection type (ROULETTE_WHEEL or TOURNAMENT). If null, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setSelectionType(SELECTION_TYPE selectionType) {
 		if (selectionType != null)
@@ -248,8 +248,8 @@ public class NEATConfigBuilder {
      * Only used when selectionType is TOURNAMENT.
      * Default value is 1.
      * 
-     * @param tournamentSize The tournament size. If less than 1, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param tournamentSize The tournament size. If less than 1, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setTournamentSize(int tournamentSize) {
 		if (tournamentSize >= 1)
@@ -265,8 +265,8 @@ public class NEATConfigBuilder {
      * Lower values create more species with fewer members in each.
      * Default value is 3.
      * 
-     * @param compatibilityThreshold The compatibility threshold value. If less than zero, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param compatibilityThreshold The compatibility threshold value. If less than zero, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setCompatibilityThreshold(double compatibilityThreshold) {
 		if (compatibilityThreshold >= 0)
@@ -282,8 +282,8 @@ public class NEATConfigBuilder {
      * other genome being compared.
      * Default value is 1.
      * 
-     * @param compatibilityExcessCoefficient The excess genes coefficient. If less than zero, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param compatibilityExcessCoefficient The excess genes coefficient. If less than zero, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setCompatibilityExcessCoefficient(double compatibilityExcessCoefficient) {
 		if (compatibilityExcessCoefficient >= 0)
@@ -298,8 +298,8 @@ public class NEATConfigBuilder {
      * Disjoint genes are those that exist in one genome but not the other, excluding excess genes.
      * Default value is 1.
      * 
-     * @param compatibilityDisjointCoefficient The disjoint genes coefficient. If less than zero, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param compatibilityDisjointCoefficient The disjoint genes coefficient. If less than zero, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setCompatibilityDisjointCoefficient(double compatibilityDisjointCoefficient) {
 		if (compatibilityDisjointCoefficient >= 0)
@@ -314,8 +314,8 @@ public class NEATConfigBuilder {
      * This factor accounts for how differently weighted the matching connections are between genomes.
      * Default value is 0.5.
      * 
-     * @param compatibilityWeightCoefficient The weight difference coefficient. If less than zero, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param compatibilityWeightCoefficient The weight difference coefficient. If less than zero, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setCompatibilityWeightCoefficient(double compatibilityWeightCoefficient) {
 		if (compatibilityWeightCoefficient >= 0)
@@ -330,8 +330,8 @@ public class NEATConfigBuilder {
      * This can help maintain an appropriate level of diversity in the population.
      * Default value is false.
      * 
-     * @param dynamicCompatabilityThreshold true to enable dynamic adjustment
-     * @return This builder instance for method chaining
+     * @param dynamicCompatabilityThreshold true to enable dynamic adjustment.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setDynamicCompatabilityThreshold(boolean dynamicCompatabilityThreshold) {
 		neatConfig.dynamicCompatibilityThreshold = dynamicCompatabilityThreshold;
@@ -345,8 +345,8 @@ public class NEATConfigBuilder {
      * Only relevant when dynamic compatibility threshold is enabled.
      * Default value is 1.
      * 
-     * @param targetNumberOfSpecies The target number of species. If less than 1, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param targetNumberOfSpecies The target number of species. If less than 1, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setTargetNumberOfSpecies(int targetNumberOfSpecies) {
 		if (targetNumberOfSpecies >= 1)
@@ -361,8 +361,8 @@ public class NEATConfigBuilder {
      * Higher values cause faster adjustment but may lead to oscillation.
      * Default value is 0.1.
      * 
-     * @param compatabilityThresholdAdjustingFactor The threshold adjustment factor. If less than or equal to zero, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param compatabilityThresholdAdjustingFactor The threshold adjustment factor. If less than or equal to zero, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setCompatabilityThresholdAdjustingFactor(double compatabilityThresholdAdjustingFactor) {
 		if (compatabilityThresholdAdjustingFactor > 0)
@@ -377,8 +377,8 @@ public class NEATConfigBuilder {
      * An empty array creates networks with no initial hidden nodes.
      * Default value is an empty array.
      * 
-     * @param hiddenNodes Variable number of integers defining nodes per hidden layer. If there's a value which is less than zero, that value will not be taken
-     * @return This builder instance for method chaining
+     * @param hiddenNodes Variable number of integers defining nodes per hidden layer. If there's a value which is less than zero, that value will not be taken.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setStartingHiddenNodes(int...hiddenNodes) {
 		neatConfig.startingHiddenNodes = hiddenNodes;
@@ -391,8 +391,8 @@ public class NEATConfigBuilder {
      * Prevents networks from growing too large during evolution.
      * Default value Integer.MAX_VALUE (uncapped).
      * 
-     * @param maxNumberOfHiddenNodes The maximum number of hidden nodes allowed. If less than zero, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param maxNumberOfHiddenNodes The maximum number of hidden nodes allowed. If less than zero, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setMaxNumberOfHiddenNodes(int maxNumberOfHiddenNodes) {
 		if (maxNumberOfHiddenNodes >= 0)
@@ -406,8 +406,8 @@ public class NEATConfigBuilder {
      * This function determines how a node combines its inputs.
      * Default value is SUM.
      * 
-     * @param startingAggregationFunction The default aggregation function. If null, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param startingAggregationFunction The default aggregation function. If null, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setStartingAggregationFunction(AggregationFunction.AGGREGATION_FUNCTION startingAggregationFunction) {
 		if (startingAggregationFunction != null)
@@ -421,8 +421,8 @@ public class NEATConfigBuilder {
      * This function determines how a hidden node transforms its aggregated input to output.
      * Default value is SIGMOID.
      * 
-     * @param startingActivationFunctionForHiddenNodes The default activation function for hidden nodes. If null, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param startingActivationFunctionForHiddenNodes The default activation function for hidden nodes. If null, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setStartingActivationFunctionForHiddenNodes(ActivationFunction.ACTIVATION_FUNCTION startingActivationFunctionForHiddenNodes) {
 		if (startingActivationFunctionForHiddenNodes != null)
@@ -436,8 +436,8 @@ public class NEATConfigBuilder {
      * This function determines how an output node transforms its aggregated input to output.
      * Default value is SIGMOID.
      * 
-     * @param startingActivationFunctionForOutputNodes The default activation function for output nodes. If null, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param startingActivationFunctionForOutputNodes The default activation function for output nodes. If null, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setStartingActivationFunctionForOutputNodes(ActivationFunction.ACTIVATION_FUNCTION startingActivationFunctionForOutputNodes) {
 		if (startingActivationFunctionForOutputNodes != null)
@@ -452,8 +452,8 @@ public class NEATConfigBuilder {
      * Different patterns provide different starting points for evolution.
      * Default value is UNCONNECTED (no connections).
      * 
-     * @param initConnectivity The initial connectivity pattern. If null, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param initConnectivity The initial connectivity pattern. If null, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setInitConnectivity(CONNECTIVITY initConnectivity) {
 		if (initConnectivity != null)
@@ -475,8 +475,8 @@ public class NEATConfigBuilder {
 	 * - LINEAR
 	 * - STEP 
 	 * 
-	 * @param activationDefault Default activation function for new nodes. If null, then the new value will not be set
-	 * @return This builder instance
+	 * @param activationDefault Default activation function for new nodes. If null, then the new value will not be set.
+	 * @return This builder instance.
 	 */
 	public NEATConfigBuilder setActivationDefault(ActivationFunction.ACTIVATION_FUNCTION activationDefault) {
 		if (activationDefault != null)
@@ -490,8 +490,8 @@ public class NEATConfigBuilder {
      * Higher values make activation function mutations more frequent.
      * Default value is 0.
      * 
-     * @param activationMutationRate The activation function mutation rate between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param activationMutationRate The activation function mutation rate between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setActivationMutationRate(double activationMutationRate) {
 		if (activationMutationRate >= 0 && activationMutationRate <= 1)
@@ -514,8 +514,8 @@ public class NEATConfigBuilder {
 	 * - MEAN
 	 * - MAXABS
 	 * 
-	 * @param aggregationDefault Default aggregation function for new nodes. If null, then the new value will not be set
-	 * @return This builder instance
+	 * @param aggregationDefault Default aggregation function for new nodes. If null, then the new value will not be set.
+	 * @return This builder instance.
 	 */
 	public NEATConfigBuilder setAggregationDefault(AggregationFunction.AGGREGATION_FUNCTION aggregationDefault) {
 		if (aggregationDefault != null)
@@ -529,8 +529,8 @@ public class NEATConfigBuilder {
      * Higher values make aggregation function mutations more frequent.
      * Default value is 0.
      * 
-     * @param aggregationMutationRate The aggregation function mutation rate between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param aggregationMutationRate The aggregation function mutation rate between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setAggregationMutationRate(double aggregationMutationRate) {
 		if (aggregationMutationRate >= 0 && aggregationMutationRate <= 1)
@@ -558,11 +558,12 @@ public class NEATConfigBuilder {
      * Used when bias initialization type is NORMAL.
      * Default value is 1.
      * 
-     * @param biasInitStdev The bias initialization standard deviation
-     * @return This builder instance for method chaining
+     * @param biasInitStdev The bias initialization standard deviation. If less than zero, the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setBiasInitStdev(double biasInitStdev) {
-		neatConfig.biasInitStdev = biasInitStdev;
+		if (biasInitStdev >= 0)
+			neatConfig.biasInitStdev = biasInitStdev;
 		return this;
 	}
 	
@@ -572,8 +573,8 @@ public class NEATConfigBuilder {
      * Determines whether biases are initialized with uniform or normal distribution.
      * Default value is NORMAL.
      * 
-     * @param biasInitDistributionType The bias initialization distribution type. If null, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param biasInitDistributionType The bias initialization distribution type. If null, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setBiasInitDistributionType(DISTRIBUTION biasInitDistributionType) {
 		if (biasInitDistributionType != null)
@@ -587,8 +588,8 @@ public class NEATConfigBuilder {
      * Biases are clamped to this value during initialization and mutation.
      * Default value is 50.
      * 
-     * @param biasMaxValue The maximum bias value
-     * @return This builder instance for method chaining
+     * @param biasMaxValue The maximum bias value.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setBiasMaxValue(double biasMaxValue) {
 		neatConfig.biasMaxValue = biasMaxValue;
@@ -601,8 +602,8 @@ public class NEATConfigBuilder {
      * Biases are clamped to this value during initialization and mutation.
      * Default value is -50.
      * 
-     * @param biasMinValue The minimum bias value
-     * @return This builder instance for method chaining
+     * @param biasMinValue The minimum bias value.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setBiasMinValue(double biasMinValue) {
 		neatConfig.biasMinValue = biasMinValue;
@@ -616,8 +617,8 @@ public class NEATConfigBuilder {
      * Larger values allow for bigger jumps in bias values.
      * Default value is 0.1 (10%).
      * 
-     * @param biasMutationPower The bias mutation power. If less than or equal to zero, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param biasMutationPower The bias mutation power. If less than or equal to zero, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setBiasMutationPower(double biasMutationPower) {
 		if (biasMutationPower > 0)
@@ -631,8 +632,8 @@ public class NEATConfigBuilder {
      * Higher values make small bias adjustments more frequent.
      * Default value is 0.8 (80%).
      * 
-     * @param biasAdjustingRate The bias adjustment rate between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param biasAdjustingRate The bias adjustment rate between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setBiasAdjustingRate(double biasAdjustingRate) {
 		if (biasAdjustingRate >= 0 && biasAdjustingRate <= 1)
@@ -646,8 +647,8 @@ public class NEATConfigBuilder {
      * Higher values make complete bias replacements more frequent.
      * Default value is 0.1 (10%).
      * 
-     * @param biasRandomizingRate The bias randomization rate between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param biasRandomizingRate The bias randomization rate between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setBiasRandomizingRate(double biasRandomizingRate) {
 		if (biasRandomizingRate >= 0 && biasRandomizingRate <= 1)
@@ -662,8 +663,8 @@ public class NEATConfigBuilder {
      * Higher values lead to more complex networks more quickly.
      * Default value is 0.03 (3%).
      * 
-     * @param probAddConnection The add connection probability between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param probAddConnection The add connection probability between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setProbAddConnection(double probAddConnection) {
 		if (probAddConnection >= 0 && probAddConnection <= 1)
@@ -678,8 +679,8 @@ public class NEATConfigBuilder {
      * the likelihood of creating recurrent (looping) connections.
      * Default value is 0.1 (10% Knowing the probability for adding a connection has succeeded).
      * 
-     * @param probRecurrentConnection The recurrent connection probability between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param probRecurrentConnection The recurrent connection probability between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setProbRecurrentConnection(double probRecurrentConnection) {
 		if (probRecurrentConnection >= 0 && probRecurrentConnection <= 1)
@@ -694,8 +695,8 @@ public class NEATConfigBuilder {
      * Higher values can lead to simpler networks.
      * Default value is 0 (0%).
      * 
-     * @param probDeleteConnection The delete connection probability between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param probDeleteConnection The delete connection probability between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setProbDeleteConnection(double probDeleteConnection) {
 		if (probDeleteConnection >= 0 && probDeleteConnection <= 1)
@@ -710,8 +711,8 @@ public class NEATConfigBuilder {
      * be activated through mutation.
      * Default value is true.
      * 
-     * @param enabledDefault true if new connections are enabled by default, false otherwise
-     * @return This builder instance for method chaining
+     * @param enabledDefault true if new connections are enabled by default, false otherwise.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setEnabledDefault(boolean enabledDefault) {
 		neatConfig.enabledDefault = enabledDefault;
@@ -724,8 +725,8 @@ public class NEATConfigBuilder {
      * Controls how frequently connections are enabled or disabled.
      * Default value is 0 (0%).
      * 
-     * @param enabledMutationRate The connection enabled status mutation rate between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param enabledMutationRate The connection enabled status mutation rate between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setEnabledMutationRate(double enabledMutationRate) {
 		if (enabledMutationRate >= 0 && enabledMutationRate <= 1)
@@ -750,7 +751,7 @@ public class NEATConfigBuilder {
 	 * currently enabled.
 	 * 
 	 * @param enabledRateForEnabled Additional mutation rate specifically for enabled connections.
-	 * @return This builder instance for method chaining
+	 * @return This builder instance for method chaining.
 	 */
 	public NEATConfigBuilder setEnabledRateForEnabled(double enabledRateForEnabled) {
 		neatConfig.enabledRateForEnabled = enabledRateForEnabled;
@@ -773,7 +774,7 @@ public class NEATConfigBuilder {
 	 * currently disabled.
 	 * Default value is 0 (0%).
 	 * 
-	 * @param enabledRateForEnabled Additional mutation rate specifically for enabled connections.
+	 * @param enabledRateForEnabled Additional mutation rate specifically for disabled connections.
 	 * @return This builder instance for method chaining
 	 */
 	public NEATConfigBuilder setEnabledRateForDisabled(double enabledRateForDisabled) {
@@ -788,8 +789,8 @@ public class NEATConfigBuilder {
      * This is typically used for problems that don't have a temporal component.
      * Default value is true.
      * 
-     * @param feedForward true if the network must be feed-forward, false if recurrent connections are allowed
-     * @return This builder instance for method chaining
+     * @param feedForward true if the network must be feed-forward, false if recurrent connections are allowed.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setFeedForward(boolean feedForward) {
 		neatConfig.feedForward = feedForward;
@@ -803,8 +804,8 @@ public class NEATConfigBuilder {
      * Higher values lead to more complex networks more quickly.
      * Default value is 0.01 (1%).
      * 
-     * @param probAddNode The add node probability between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param probAddNode The add node probability between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setProbAddNode(double probAddNode) {
 		if (probAddNode >= 0 && probAddNode <= 1)
@@ -819,8 +820,8 @@ public class NEATConfigBuilder {
      * Higher values can lead to simpler networks.
      * Default value is 0 (0%).
      * 
-     * @param probDeleteNode The delete node probability between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param probDeleteNode The delete node probability between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setProbDeleteNode(double probDeleteNode) {
 		if (probDeleteNode >= 0 && probDeleteNode <= 1)
@@ -834,8 +835,8 @@ public class NEATConfigBuilder {
      * Response values scale the output of a node's activation function.
      * Default value is 0.
      * 
-     * @param responseInitMean The response initialization mean
-     * @return This builder instance for method chaining
+     * @param responseInitMean The response initialization mean.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setResponseInitMean(double responseInitMean) {
 		neatConfig.responseInitMean = responseInitMean;
@@ -848,11 +849,12 @@ public class NEATConfigBuilder {
      * Used when response initialization type is NORMAL.
      * Default value is 0.
      * 
-     * @param responseInitStdev The response initialization standard deviation
-     * @return This builder instance for method chaining
+     * @param responseInitStdev The response initialization standard deviation. If less than zero, the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setResponseInitStdev(double responseInitStdev) {
-		neatConfig.responseInitStdev = responseInitStdev;
+		if (responseInitStdev >= 0)
+			neatConfig.responseInitStdev = responseInitStdev;
 		return this;
 	}
 	
@@ -862,8 +864,8 @@ public class NEATConfigBuilder {
      * Determines whether responses are initialized with uniform or normal distribution.
      * Default value is NORMAL.
      * 
-     * @param responseInitDistributionType The response initialization distribution type. If null, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param responseInitDistributionType The response initialization distribution type. If null, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setResponseInitDistributionType(DISTRIBUTION responseInitDistributionType) {
 		if (responseInitDistributionType != null)
@@ -877,8 +879,8 @@ public class NEATConfigBuilder {
      * Responses are clamped to this value during initialization and mutation.
      * Default value is 50.
      * 
-     * @param responseMaxValue The maximum response value
-     * @return This builder instance for method chaining
+     * @param responseMaxValue The maximum response value.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setResponseMaxValue(double responseMaxValue) {
 		neatConfig.responseMaxValue = responseMaxValue;
@@ -891,8 +893,8 @@ public class NEATConfigBuilder {
      * Responses are clamped to this value during initialization and mutation.
      * Default value is -50.
      * 
-     * @param responseMinValue The minimum response value
-     * @return This builder instance for method chaining
+     * @param responseMinValue The minimum response value.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setResponseMinValue(double responseMinValue) {
 		neatConfig.responseMinValue = responseMinValue;
@@ -905,8 +907,8 @@ public class NEATConfigBuilder {
      * Controls how much a response can change in a single mutation.
      * Default value is 0.1.
      * 
-     * @param responseMutationPower The response mutation power
-     * @return This builder instance for method chaining
+     * @param responseMutationPower The response mutation power.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setResponseMutationPower(double responseMutationPower) {
 		neatConfig.responseMutationPower = responseMutationPower;
@@ -919,8 +921,8 @@ public class NEATConfigBuilder {
      * Higher values make small response adjustments more frequent.
      * Default value is 0.7 (70%).
      * 
-     * @param responseAdjustingRate The response adjustment rate between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param responseAdjustingRate The response adjustment rate between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setResponseAdjustingRate(double responseAdjustinRate) {
 		if (responseAdjustinRate >= 0 && responseAdjustinRate <= 1)
@@ -934,8 +936,8 @@ public class NEATConfigBuilder {
      * Higher values make complete response replacements more frequent.
      * Default value is 0.1 (10%).
      * 
-     * @param responseRandomizingRate The response randomization rate between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param responseRandomizingRate The response randomization rate between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setResponseRandomizingRate(double responseRandomizingRate) {
 		if (responseRandomizingRate >= 0 && responseRandomizingRate <= 1)
@@ -950,8 +952,8 @@ public class NEATConfigBuilder {
      * This can help prevent too rapid topology changes.
      * Default value is false.
      * 
-     * @param singleStructuralMutation true if only one structural mutation is allowed, false otherwise
-     * @return This builder instance for method chaining
+     * @param singleStructuralMutation true if only one structural mutation is allowed, false otherwise.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setSingleStructuralMutation(boolean singleStructuralMutation) {
 		neatConfig.singleStructuralMutation = singleStructuralMutation;
@@ -976,8 +978,8 @@ public class NEATConfigBuilder {
 	 * even in edge cases.
 	 * Default value is false.
 	 * 
-	 * @param structuralMutationAdvisor true to enable the structural mutation advisor, false to disable it
-	 * @return This builder instance for method chaining
+	 * @param structuralMutationAdvisor true to enable the structural mutation advisor, false to disable it.
+	 * @return This builder instance for method chaining.
 	 */
 	public NEATConfigBuilder setStructuralMutationAdvisor(boolean structuralMutationAdvisor) {
 		neatConfig.structuralMutationAdvisor = structuralMutationAdvisor;
@@ -990,8 +992,8 @@ public class NEATConfigBuilder {
      * Used with the weight initialization distribution.
      * Default value is 0.
      * 
-     * @param weightInitMean The weight initialization mean
-     * @return This builder instance for method chaining
+     * @param weightInitMean The weight initialization mean.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setWeightInitMean(double weightInitMean) {
 		neatConfig.weightInitMean = weightInitMean;
@@ -1004,11 +1006,12 @@ public class NEATConfigBuilder {
      * Used when weight initialization type is NORMAL.
      * Default value is 1.
      * 
-     * @param weightInitStdev The weight initialization standard deviation
-     * @return This builder instance for method chaining
+     * @param weightInitStdev The weight initialization standard deviation. If less than zero, the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setWeightInitStdev(double weightInitStdev) {
-		neatConfig.weightInitStdev = weightInitStdev;
+		if (weightInitStdev >= 0)
+			neatConfig.weightInitStdev = weightInitStdev;
 		return this;
 	}
 	
@@ -1018,8 +1021,8 @@ public class NEATConfigBuilder {
      * Determines whether weights are initialized with uniform or normal distribution.
      * Default value is NORMAL.
      * 
-     * @param weightInitType The weight initialization distribution type. If null, then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param weightInitType The weight initialization distribution type. If null, then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setWeightInitDistributionType(DISTRIBUTION weightInitDistributionType) {
 		if (weightInitDistributionType != null)
@@ -1033,8 +1036,8 @@ public class NEATConfigBuilder {
      * Weights are clamped to this value during initialization and mutation.
      * Default value is 50.
      * 
-     * @param weightMaxValue The maximum weight value
-     * @return This builder instance for method chaining
+     * @param weightMaxValue The maximum weight value.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setWeightMaxValue(double weightMaxValue) {
 		neatConfig.weightMaxValue = weightMaxValue;
@@ -1047,8 +1050,8 @@ public class NEATConfigBuilder {
      * Weights are clamped to this value during initialization and mutation.
      * Default value is -50.
      * 
-     * @param weightMinValue The minimum weight value
-     * @return This builder instance for method chaining
+     * @param weightMinValue The minimum weight value.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setWeightMinValue(double weightMinValue) {
 		neatConfig.weightMinValue = weightMinValue;
@@ -1061,8 +1064,8 @@ public class NEATConfigBuilder {
      * Controls how much a weight can change in a single mutation.
      * Default value is 0.1.
      * 
-     * @param weightMutationPower The weight mutation power
-     * @return This builder instance for method chaining
+     * @param weightMutationPower The weight mutation power.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setWeightMutationPower(double weightMutationPower) {
 		neatConfig.weightMutationPower = weightMutationPower;
@@ -1075,8 +1078,8 @@ public class NEATConfigBuilder {
      * Higher values make small weight adjustments more frequent.
      * Default value is 0.8 (80%).
      * 
-     * @param weightAdjustingRate The weight adjustment rate between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param weightAdjustingRate The weight adjustment rate between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setWeightAdjustingRate(double weightAdjustingRate) {
 		if (weightAdjustingRate >= 0 && weightAdjustingRate <= 1)
@@ -1090,8 +1093,8 @@ public class NEATConfigBuilder {
      * Higher values make complete weight replacements more frequent.
      * Default value is 0.1 (10%).
      * 
-     * @param weightRandomizingRate The weight randomization rate between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param weightRandomizingRate The weight randomization rate between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setWeightRandomizingRate(double weightRandomizingRate) {
 		if (weightRandomizingRate >= 0 && weightRandomizingRate <= 1)
@@ -1107,8 +1110,8 @@ public class NEATConfigBuilder {
      * a FULL_* connectivity type.
      * Default value is 0.5 (50%).
      * 
-     * @param probConnectInit The connection creation probability between 0 and 1. If not [0~1], then the new value will not be set
-     * @return This builder instance for method chaining
+     * @param probConnectInit The connection creation probability between 0 and 1. If not [0~1], then the new value will not be set.
+     * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setProbConnectInit(double probConnectInit) {
 		if (probConnectInit >= 0 && probConnectInit <= 1)
@@ -1123,7 +1126,7 @@ public class NEATConfigBuilder {
      * configured NEATConfig object. After calling this method, this builder
      * instance should no longer be used.
      * 
-     * @return The fully configured NEATConfig instance
+     * @return The fully configured NEATConfig instance.
      */
 	public NEATConfig build() {
 		return neatConfig;
