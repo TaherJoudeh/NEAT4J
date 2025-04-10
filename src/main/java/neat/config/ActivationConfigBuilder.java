@@ -56,7 +56,8 @@ public class ActivationConfigBuilder {
          * Sets the activation threshold for the sigmoid function.
          * 
          * The sigmoid activation threshold determines the input value at which the
-         * activation is considered "on" (1) or "off" (0). Default value is 0.5.
+         * activation is considered "on" (1) or "off" (0).
+         * Default value is 0.5.
          * 
          * @param threshold The threshold value for the sigmoid activation function
          * @return This builder instance for method chaining
@@ -70,7 +71,8 @@ public class ActivationConfigBuilder {
          * Sets the activation threshold for the tanh function.
          * 
          * The tanh activation threshold determines the input value at which the
-         * activation is considered "on" (1) or "off" (-1). Default value is 0.
+         * activation is considered "on" (1) or "off" (-1).
+         * Default value is 0.
          * 
          * @param threshold The threshold value for the tanh activation function
          * @return This builder instance for method chaining
@@ -84,7 +86,8 @@ public class ActivationConfigBuilder {
          * Sets the activation threshold for the step function.
          * 
          * The step activation threshold determines the input value at which the
-         * function output steps from 0 to 1. Default value is 0.
+         * function output steps from 0 to 1.
+         * Default value is 0.
          * 
          * @param threshold The threshold value for the step activation function
          * @return This builder instance for method chaining
@@ -129,11 +132,12 @@ public class ActivationConfigBuilder {
          * below the activation threshold. A value of 0 gives standard ReLU behavior,
          * while positive values allow some signal to "leak through" for negative inputs.
          * 
-         * @param leak The leak value for Leaky ReLU (typically a small positive value like 0.01)
+         * @param leak The leak value for Leaky ReLU (typically a small positive value like 0.01). If less than zero, the new value will not be set.
          * @return This builder instance for method chaining
          */
 		public ActivationConfigBuilder setReluLeak(double leak) {
-			activationConfig.reluLeak = leak;
+			if (leak >= 0)
+				activationConfig.reluLeak = leak;
 			return this;
 		}
 		
