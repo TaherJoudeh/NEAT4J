@@ -21,8 +21,7 @@
 6. ### Testing
    - Example: ***TestXOR*** demonstrates evolving a network to solve XOR.
 ## Installation
-- Clone the Repository:
-   `git clone https://github.com/TaherJoudeh/NEAT4J`
+  If you want to get all, then clone the repository with the command `git clone https://github.com/TaherJoudeh/NEAT4J`. But if you want to use the library just install __*neat4j.jar*__ file.
 ## Quick Start
 1. ### Configure NEAT
    	```java
