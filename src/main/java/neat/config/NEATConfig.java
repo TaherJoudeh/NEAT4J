@@ -288,7 +288,7 @@ public class NEATConfig implements Serializable {
      * Target number of species when using dynamic compatibility threshold.
      * Default is 0.
      */
-	protected int targetNumberOfSpecies = 0;
+	protected int targetNumberOfSpecies = 1;
 	
     /**
      * Factor by which to adjust compatibility threshold when using dynamic adjustment.

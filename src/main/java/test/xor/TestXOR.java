@@ -17,8 +17,6 @@ public class TestXOR {
 	public static void main(String[] args) {
 		
 		NEATConfig neatConfig = new NEATConfigBuilder(150, 2, 1)
-				.setStructuralMutationAdvisor(false)
-				.setSingleStructuralMutation(false)
 				.setMaxNumberOfHiddenNodes(1)
 				
 				.setCompatibilityExcessCoefficient(1)
@@ -30,17 +28,12 @@ public class TestXOR {
 				.setCompatabilityThresholdAdjustingFactor(0.2)
 				.setTargetNumberOfSpecies(20)
 				.setSpeciesFitnessFunction(SPECIES_FITNESS_FUNCTION.MAX)
-				.setFitnessCriterion(FITNESS_CRITERION.MAX)
 				
 				.setFitnessTermination(true)
-				.setGenerationTermination(false)
-				.setGenerationTerminationThreshold(100)
 				.setFitnessTerminationThreshold(3.9)
 				
 				.setProbAddConnection(0.1)
-//				.setProbDeleteConnection(0.5)
 				.setProbAddNode(0.06)
-//				.setProbDeleteNode(0.05)
 				
 				.setEnabledMutationRate(0.01)
 				.setEnabledRateForEnabled(-0.01)
