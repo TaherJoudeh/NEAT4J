@@ -3,6 +3,7 @@ package main.java.neat.functions;
 import java.io.Serializable;
 import java.util.Arrays;
 import main.java.neat.config.AggregationConfig;
+import main.java.neat.functions.AggregationFunction.AGGREGATION_FUNCTION;
 
 public abstract class AggregationFunction implements Serializable {
 	
@@ -81,13 +82,33 @@ public abstract class AggregationFunction implements Serializable {
 			aggFunction = new SumAggregationFunction();
 			break;
 		case RANDOM:
-			aggFunction = AggregationConfig.getRandomAggregationFunction();
+			aggFunction = getRandomAggregationFunction();
 		}
 		
 		return aggFunction;
 	}
 	
 	public abstract double aggregate(double[] x);
+	
+    /**
+     * Returns a random aggregation function instance.
+     * 
+     * This static utility method selects a random aggregation function from all
+     * available functions (excluding the RANDOM function itself). It's typically
+     * used during mutation operations when a random aggregation function needs
+     * to be assigned to a node.
+     * 
+     * Note that this method returns an actual AggregationFunction instance,
+     * not just the enum value, making it ready for direct use in a node.
+     * 
+     * @return A randomly selected aggregation function instance
+     */
+	protected static AggregationFunction getRandomAggregationFunction() {
+		
+		int numOfAggFuncs = AGGREGATION_FUNCTION.values().length-1;
+		return getAggregationFunction(AGGREGATION_FUNCTION.values()[(int)(Math.random()*numOfAggFuncs)]);
+		
+	}
 }
 
 class SumAggregationFunction extends AggregationFunction {

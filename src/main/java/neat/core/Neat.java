@@ -41,8 +41,8 @@ public class Neat {
 	public Neat(NEATConfig neatConfig) {
 		this.neatConfig = neatConfig;
 		
-		GENERATION_TERMINATION_MESSAGE = "Terminated due to reaching the generation threshold [generationThreshold: " + neatConfig.getGenerationThreshold() + "]";
-		FITNESS_TERMINATION_MESSAGE = "Terminated due to reaching the fitness threshold [fitnessThreshold: " + neatConfig.getFitnessThreshold() + "]";
+		GENERATION_TERMINATION_MESSAGE = "Terminated due to reaching the generation threshold [generationThreshold: " + neatConfig.getGenerationTerminationThreshold() + "]";
+		FITNESS_TERMINATION_MESSAGE = "Terminated due to reaching the fitness threshold [fitnessThreshold: " + neatConfig.getFitnessTerminationThreshold() + "]";
 		
 		this.compatabilityThreshold = neatConfig.getCompatabilityThreshold();
 		init();
@@ -104,17 +104,17 @@ public class Neat {
 		if (state != RUNNING || (!neatConfig.isGenerationTermination() && !neatConfig.isFitnessTermination()))
 			return state;
 		
-		if (neatConfig.isGenerationTermination() && generation >= neatConfig.getGenerationThreshold())
+		if (neatConfig.isGenerationTermination() && generation >= neatConfig.getGenerationTerminationThreshold())
 			return GENERATION_TERMINATION;
 		if (neatConfig.isFitnessTermination()) {
 			double[] fitness = new double[neatConfig.getPopulationSize()];
 			for (int i = 0; i < neatConfig.getPopulationSize(); i++)
 				fitness[i] = population[i].getFitness();
 			if ((neatConfig.getFitnessCriterion() == FITNESS_CRITERION.MAX &&
-					fitnessCriterion.aggregate(fitness) >= neatConfig.getFitnessThreshold())
+					fitnessCriterion.aggregate(fitness) >= neatConfig.getFitnessTerminationThreshold())
 					||
 				(neatConfig.getFitnessCriterion() == FITNESS_CRITERION.MIN &&
-					fitnessCriterion.aggregate(fitness) <= neatConfig.getFitnessThreshold())) {
+					fitnessCriterion.aggregate(fitness) <= neatConfig.getFitnessTerminationThreshold())) {
 				return FITNESS_TERMINATION;
 			}
 		}

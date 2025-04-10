@@ -43,7 +43,7 @@ public class TestXOR {
 //				.setProbDeleteNode(0.05)
 				
 				.setEnabledMutationRate(0.01)
-				.setEnabledRateToEnabled(-0.01)
+				.setEnabledRateForEnabled(-0.01)
 				.setInitConnectivity(CONNECTIVITY.FULL_DIRECT)
 				.setSurvivalThreshold(0.2)
 				.setStagnation(10)

@@ -190,9 +190,9 @@ public class Genome implements Serializable {
 				node.setActivationFunction(ActivationFunction.getActivationFunction(
 						neatConfig.getStartingActivationFunctionForHiddenNodes(), neatConfig.getActivationConfig()
 						));
-				node.randomizeBias(neatConfig.getBiasInitMean(),neatConfig.getBiasInitStdev(),neatConfig.getBiasInitType(),
+				node.randomizeBias(neatConfig.getBiasInitMean(),neatConfig.getBiasInitStdev(),neatConfig.getBiasInitDistributionType(),
 						neatConfig.getBiasMaxValue(),neatConfig.getBiasMinValue());
-				node.randomizeResponse(neatConfig.getResponseInitMean(),neatConfig.getResponseInitStdev(),neatConfig.getBiasInitType(),
+				node.randomizeResponse(neatConfig.getResponseInitMean(),neatConfig.getResponseInitStdev(),neatConfig.getBiasInitDistributionType(),
 						neatConfig.getResponseMaxValue(),neatConfig.getResponseMinValue());
 				
 				nodes.add(node);
@@ -210,9 +210,9 @@ public class Genome implements Serializable {
 			node.setActivationFunction(ActivationFunction.getActivationFunction(
 					neatConfig.getStartingActivationFunctionForOutputNodes(), neatConfig.getActivationConfig()
 					));
-			node.randomizeBias(neatConfig.getBiasInitMean(),neatConfig.getBiasInitStdev(),neatConfig.getBiasInitType(),
+			node.randomizeBias(neatConfig.getBiasInitMean(),neatConfig.getBiasInitStdev(),neatConfig.getBiasInitDistributionType(),
 					neatConfig.getBiasMaxValue(),neatConfig.getBiasMinValue());
-			node.randomizeResponse(neatConfig.getResponseInitMean(),neatConfig.getResponseInitStdev(),neatConfig.getBiasInitType(),
+			node.randomizeResponse(neatConfig.getResponseInitMean(),neatConfig.getResponseInitStdev(),neatConfig.getBiasInitDistributionType(),
 					neatConfig.getResponseMaxValue(),neatConfig.getResponseMinValue());
 			
 			nodes.add(node);
@@ -526,7 +526,7 @@ public class Genome implements Serializable {
 		connection.setEnabled(neatConfig.enabledDefault());
 
 		if (weight == Connection.VOID_DOUBLE_VALUE)
-			connection.randomizeWeight(neatConfig.getWeightInitMean(), neatConfig.getWeightInitStdev(), neatConfig.getBiasInitType(),
+			connection.randomizeWeight(neatConfig.getWeightInitMean(), neatConfig.getWeightInitStdev(), neatConfig.getBiasInitDistributionType(),
 				neatConfig.getWeightMaxValue(), neatConfig.getWeightMinValue());
 		else connection.setWeight(Math.max(Math.min(neatConfig.getWeightMaxValue(), weight), neatConfig.getWeightMinValue()));
 		
@@ -574,9 +574,9 @@ public class Genome implements Serializable {
 		newNode.setActivationFunction(ActivationFunction.getActivationFunction(
 				neatConfig.getStartingActivationFunctionForHiddenNodes(), neatConfig.getActivationConfig()
 				));
-		newNode.randomizeBias(neatConfig.getBiasInitMean(),neatConfig.getBiasInitStdev(),neatConfig.getBiasInitType(),
+		newNode.randomizeBias(neatConfig.getBiasInitMean(),neatConfig.getBiasInitStdev(),neatConfig.getBiasInitDistributionType(),
 				neatConfig.getBiasMaxValue(),neatConfig.getBiasMinValue());
-		newNode.randomizeResponse(neatConfig.getResponseInitMean(),neatConfig.getResponseInitStdev(),neatConfig.getResponseInitType(),
+		newNode.randomizeResponse(neatConfig.getResponseInitMean(),neatConfig.getResponseInitStdev(),neatConfig.getResponseInitDistributionType(),
 				neatConfig.getResponseMaxValue(),neatConfig.getResponseMinValue());
 				
 		addConnection(rc.getFrom(), newNode, rc.getWeight(), false);
@@ -649,13 +649,13 @@ public class Genome implements Serializable {
 			if (random.nextDouble() < neatConfig.getResponseAdjustingRate())
 				node.adjustResponse(neatConfig.getResponseMutationPower(), neatConfig.getResponseMaxValue(), neatConfig.getResponseMinValue());
 			else if (random.nextDouble() < neatConfig.getResponseRandomizingRate())
-				node.randomizeResponse(neatConfig.getResponseInitMean(), neatConfig.getResponseInitStdev(), neatConfig.getResponseInitType(),
+				node.randomizeResponse(neatConfig.getResponseInitMean(), neatConfig.getResponseInitStdev(), neatConfig.getResponseInitDistributionType(),
 						neatConfig.getResponseMaxValue(), neatConfig.getResponseMinValue());
 			
 			if (random.nextDouble() < neatConfig.getBiasAdjustingRate())
 				node.adjustBias(neatConfig.getBiasMutationPower(), neatConfig.getBiasMaxValue(), neatConfig.getBiasMinValue());
 			else if (random.nextDouble() < neatConfig.getBiasRandomizingRate())
-				node.randomizeBias(neatConfig.getBiasInitMean(), neatConfig.getBiasInitStdev(), neatConfig.getBiasInitType(),
+				node.randomizeBias(neatConfig.getBiasInitMean(), neatConfig.getBiasInitStdev(), neatConfig.getBiasInitDistributionType(),
 						neatConfig.getBiasMaxValue(), neatConfig.getBiasMinValue()); 
 			
 			if (node.getType() == TYPE.HIDDEN && random.nextDouble() < neatConfig.getAggregationMutationRate()) {
@@ -678,13 +678,15 @@ public class Genome implements Serializable {
 					if (random.nextDouble() < neatConfig.getWeightAdjustingRate())
 						connection.adjustWeight(neatConfig.getWeightMutationPower(), neatConfig.getWeightMaxValue(), neatConfig.getWeightMinValue());
 					else if (random.nextDouble() < neatConfig.getWeightRandomizingRate())
-						connection.randomizeWeight(neatConfig.getWeightInitMean(), neatConfig.getWeightInitStdev(), neatConfig.getBiasInitType(),
+						connection.randomizeWeight(neatConfig.getWeightInitMean(), neatConfig.getWeightInitStdev(), neatConfig.getBiasInitDistributionType(),
 								neatConfig.getWeightMaxValue(), neatConfig.getWeightMinValue());
 					
 					double totalProbForEnable = neatConfig.getEnabledMutationRate();
 					if (connection.isEnabled())
-						totalProbForEnable += neatConfig.getEnabledRateToEnabled();
-					else totalProbForEnable += neatConfig.getEnabledRateToDisabled();
+						totalProbForEnable += neatConfig.getEnabledRateForEnabled();
+					else totalProbForEnable += neatConfig.getEnabledRateForDisabled();
+					
+					totalProbForEnable = Math.max(0, Math.min(totalProbForEnable, 1));
 					
 					if (random.nextDouble() < totalProbForEnable)
 						connection.setEnabled(!connection.isEnabled());
