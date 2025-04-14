@@ -772,7 +772,7 @@ public class NEATConfigBuilder {
 	 * currently disabled.
 	 * Default value is 0 (0%).
 	 * 
-	 * @param enabledRateForEnabled Additional mutation rate specifically for disabled connections.
+	 * @param enabledRateForDisabled Additional mutation rate specifically for disabled connections.
 	 * @return This builder instance for method chaining
 	 */
 	public NEATConfigBuilder setEnabledRateForDisabled(double enabledRateForDisabled) {
@@ -920,9 +920,9 @@ public class NEATConfigBuilder {
      * @param responseAdjustingRate The response adjustment rate between 0 and 1. If not [0~1], then the new value will not be set.
      * @return This builder instance for method chaining.
      */
-	public NEATConfigBuilder setResponseAdjustingRate(double responseAdjustinRate) {
-		if (responseAdjustinRate >= 0 && responseAdjustinRate <= 1)
-			neatConfig.responseAdjustingRate = responseAdjustinRate;
+	public NEATConfigBuilder setResponseAdjustingRate(double responseAdjustingRate) {
+		if (responseAdjustingRate >= 0 && responseAdjustingRate <= 1)
+			neatConfig.responseAdjustingRate = responseAdjustingRate;
 		return this;
 	}
 	
@@ -1015,7 +1015,7 @@ public class NEATConfigBuilder {
      * Determines whether weights are initialized with uniform or normal distribution.
      * Default value is NORMAL.
      * 
-     * @param weightInitType The weight initialization distribution type. If null, then the new value will not be set.
+     * @param weightInitDistributionType The weight initialization distribution type. If null, then the new value will not be set.
      * @return This builder instance for method chaining.
      */
 	public NEATConfigBuilder setWeightInitDistributionType(DISTRIBUTION weightInitDistributionType) {
@@ -1114,7 +1114,7 @@ public class NEATConfigBuilder {
 	}
 
     /**
-     * Builds and returns the configured NEATConfig instance.
+     * Builds and returns the configured {@link NEATConfig} .
      * 
      * This method finalizes the building process and returns the completely
      * configured NEATConfig object. After calling this method, this builder

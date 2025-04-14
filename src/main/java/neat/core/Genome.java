@@ -13,9 +13,11 @@ import main.java.neat.functions.ActivationFunction.ACTIVATION_FUNCTION;
 import main.java.neat.functions.AggregationFunction;
 
 /**
+ * Represents a genome in the NEAT (NeuroEvolution of Augmenting Topologies) algorithm.
+ * Contains neural network structure with nodes and connections, and implements genetic operations
+ * including mutation, crossover, and compatibility distance calculation.
  * 
  * @author Taher Joudeh
- *
  */
 public class Genome implements Serializable {
 
@@ -23,22 +25,83 @@ public class Genome implements Serializable {
 
 	private transient Random random;
 	
+	/**
+	 * Configuration parameters for evolution (mutation rates, compatibility thresholds, etc.).
+	 */
 	private NEATConfig neatConfig;
+	
+	/**
+	 * All nodes in the genome (input, hidden, and output nodes).
+	 */
 	private LinkedList<Node> nodes;
+	
+	/**
+	 * All connections between nodes in the genome.
+	 */
 	private LinkedList<Connection> connections;
 	
+	/**
+	 * Subset of nodes designated as network inputs.
+	 */
 	private LinkedList<Node> inputNodes;
+	
+	/**
+	 * Subset of nodes in hidden layers.
+	 */
 	private LinkedList<Node> hiddenNodes;
+	
+	/**
+	 * Subset of nodes designated as network outputs.
+	 */
 	private LinkedList<Node> outputNodes;
+	
+	/**
+	 * Nodes organized by layer index (0 = input, 1..n = hidden layers, last = output).
+	 */
 	private LinkedList<Node>[] nodesByLayer;
+	
+	/**
+	 * Number of hidden layers in the network architecture.
+	 */
 	private int numOfHiddenlayers;
+	
+	/**
+	 * Highest innovation number among all connections (tracks structural mutations).
+	 */
 	private int maxInnovationNumber;
 	
+	/**
+	 * Visualization coordinates mapped to nodes (x,y positions for rendering).
+	 */
 	private HashMap<Node,double[]> nodesCoordinates;
-	private int width, height;
+	
+	/**
+	 * Horizontal dimension of the visualization area in pixels.
+	 * Used to calculate node coordinates for rendering.
+	 */
+	private int width;
+	
+	/**
+	 * Vertical dimension of the visualization area in pixels.
+	 * Used to calculate node coordinates for rendering.
+	 */
+	private int height;
+	
+    /**
+     * Display size of nodes during visualization (diameter in pixels).
+     */
 	private double nodeSize;
+	
+    /**
+     * Mutation status flag - true if genome has been altered since last generation.
+     */
 	private boolean mutated;
 	
+    /**
+     * Constructs a new Genome with specified configuration.
+     * @param neatConfig NEAT algorithm configuration parameters.
+     * @param init If true, initializes basic network structure (input/hidden/output nodes).
+     */
 	protected Genome(NEATConfig neatConfig, boolean init) {
 		random = new Random();
 		this.neatConfig = neatConfig;
@@ -59,18 +122,58 @@ public class Genome implements Serializable {
 			init();
 	}
 	
+    /**
+     * @return Number of connections in the genome.
+     */
 	public int getNumberOfConnections() { return connections.size(); }
+	
+    /**
+     * @return Number of hidden nodes in the genome.
+     */
 	public int getNumberOfHiddenNodes() { return hiddenNodes.size(); }
+	
+    /**
+     * @return Number of layers in the genome.
+     */
 	public int getNumberOfLayers() { return numOfHiddenlayers+2; }
 	
+    /**
+     * @return List of input nodes (copied list).
+     */
 	public LinkedList<Node> getInputNodes() { return new LinkedList<Node> (inputNodes); }
-	public LinkedList<Node> getHiddenNodes() { return new LinkedList<Node> (hiddenNodes); }
-	public LinkedList<Node> getOutputNodes() { return new LinkedList<Node> (outputNodes); }
-	public LinkedList<Node> getNodes() { return new LinkedList<Node> (nodes); }
-	public LinkedList<Node>[] getNodesByLayers() { return nodesByLayer; }
 	
+	/**
+     * @return List of hidden nodes (copied list).
+     */
+	public LinkedList<Node> getHiddenNodes() { return new LinkedList<Node> (hiddenNodes); }
+	
+	/**
+     * @return List of output nodes (copied list).
+     */
+	public LinkedList<Node> getOutputNodes() { return new LinkedList<Node> (outputNodes); }
+	
+	/**
+     * @return List of all nodes (copied list).
+     */
+	public LinkedList<Node> getNodes() { return new LinkedList<Node> (nodes); }
+	
+    /**
+     * @return List of all connections (copied list).
+     */
 	public LinkedList<Connection> getConnections() { return new LinkedList<Connection> (connections); }
 	
+	/**
+     * @return List of Arrays of all nodes. Each node in it's own layer (copied list).
+     */
+	protected LinkedList<Node>[] getNodesByLayers() { return nodesByLayer; }
+	
+    /**
+     * Gets node coordinates for visualization purposes.
+     * @param width Visualization area width.
+     * @param height Visualization area height.
+     * @param nodeSize Node display size.
+     * @return Map of nodes to their [x,y] coordinates.
+     */
 	protected HashMap<Node,double[]> getNodesCoordinates(int width, int height, double nodeSize) {
 		if (this.width != width || this.height != height || this.nodeSize != nodeSize || mutated) {
 			this.width = width;
@@ -121,6 +224,11 @@ public class Genome implements Serializable {
 		
 	}
 	
+    /**
+     * Feeds input through the neural network and returns continuous output values.
+     * @param input Array of input values matching number of input nodes.
+     * @return Array of continuous output values from output nodes.
+     */
 	protected double[] feed(double[] input) {
 		
 		double[] output = new double[neatConfig.getNumberOfOutputs()];
@@ -140,6 +248,11 @@ public class Genome implements Serializable {
 		return output;
 	}
 	
+    /**
+     * Feeds input through the neural network and returns binary-activated outputs.
+     * @param input Array of input values matching number of input nodes.
+     * @return Array of boolean activation states from output nodes.
+     */
 	protected boolean[] feed2(double[] input) {
 		boolean[] output = new boolean[neatConfig.getNumberOfOutputs()];
 		
@@ -696,6 +809,10 @@ public class Genome implements Serializable {
 		
 	}
 	
+    /**
+     * Applies both structural and parameter mutations to the genome
+     * according to probabilities defined in NEATConfig.
+     */
 	protected void mutate() {
 		
 		mutateStructure();
@@ -703,7 +820,12 @@ public class Genome implements Serializable {
 		
 	}
 	
-	// Comparing and Evaluating
+    /**
+     * Calculates compatibility distance between two genomes for speciation.
+     * @param g1 First genome to compare.
+     * @param g2 Second genome to compare.
+     * @return Compatibility distance measure based on excess/disjoint genes and weight differences.
+     */
 	protected static double distance(Genome g1, Genome g2) {
 		
 		if (g1.connections.isEmpty() || g2.connections.isEmpty())
@@ -799,14 +921,22 @@ public class Genome implements Serializable {
 		
 		return null;
 	}
+	/*
 	private Connection getConnection(Node from, Node to) {
 		for (Connection connection: connections)
 			if (connection.getFrom().equals(from) && connection.getTo().equals(to))
 				return connection;
 		return null;
 	}
+	*/
 	
-	// Reproduction
+    /**
+     * Performs crossover operation between two genomes to produce offspring.
+     * @param g1 First parent genome (typically more fit).
+     * @param g2 Second parent genome.
+     * @param sameFitness If true, considers both parents equally fit for gene selection.
+     * @return New child genome combining characteristics of both parents.
+     */
 	protected static Genome crossover(Genome g1, Genome g2, boolean sameFitness) {
 		
 		Genome child = new Genome(g1.neatConfig, false);
@@ -861,6 +991,10 @@ public class Genome implements Serializable {
 		return child;
 	}
 	
+    /**
+     * Creates a deep copy of the genome.
+     * @return New Genome instance with identical structure and parameters.
+     */
 	@Override
 	protected Genome clone() {
 		Genome clone = new Genome(neatConfig, false);
@@ -897,6 +1031,7 @@ public class Genome implements Serializable {
 		return res;
 	}
 	
+	/*
 	private void testConnections(String label) {
 		
 		for (Connection connection: connections) {
@@ -960,9 +1095,21 @@ public class Genome implements Serializable {
 		}
 		
 	}
+	*/
 	
+    /**
+     * Helper class for genome visualization data handling.
+     */
 	public static class GenomeVisualizationData {
 		
+        /**
+         * Retrieves node coordinates for visualization.
+         * @param genome Genome to visualize.
+         * @param width Visualization area width.
+         * @param height Visualization area height.
+         * @param nodeSize Node display size.
+         * @return Map of nodes to their calculated coordinates.
+         */
 		public static HashMap<Node, double[]> getNodesCoordinates(Genome genome, int width, int height, double nodeSize) {
             return genome.getNodesCoordinates(width, height, nodeSize);
         }

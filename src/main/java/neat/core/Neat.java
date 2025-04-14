@@ -9,9 +9,11 @@ import main.java.neat.functions.AggregationFunction;
 import main.java.neat.functions.AggregationFunction.AGGREGATION_FUNCTION;
 
 /**
+ * Main class implementing the NEAT algorithm workflow. Handles population management,
+ * speciation, evolutionary cycles, and termination conditions. Manages species formation,
+ * fitness calculations, and generational evolution.
  * 
  * @author Taher Joudeh
- *
  */
 public class Neat {
 
@@ -34,10 +36,10 @@ public class Neat {
 	private double populationFitness;
 	private double populationAdjustedFitness;
 		
-	/**
-	 * 
-	 * @param neatConfig
-	 */
+    /**
+     * Constructs a NEAT algorithm controller with specified configuration.
+     * @param neatConfig Configuration parameters for the NEAT algorithm.
+     */
 	public Neat(NEATConfig neatConfig) {
 		this.neatConfig = neatConfig;
 		
@@ -80,10 +82,10 @@ public class Neat {
 		initAgents();
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
+    /**
+     * Gets the best performing agent found across all generations.
+     * @return Agent with highest/lowest fitness (depending on configuration).
+     */
 	public Agent getBest() { return best; }
 
 	private void initAgents() {
@@ -92,11 +94,34 @@ public class Neat {
 		speciate();
 	}
 	
+    /**
+     * @return All the agents in the population.
+     */
 	public Agent[] getPopulation() { return population; }
+	
+    /**
+     * @return The current generation number.
+     */
 	public int getGeneration() { return generation; }
+	
+    /**
+     * @return The population fitness.
+     */
 	public double getPopulationFitness() { return populationFitness; }
+	
+    /**
+     * @return True if evolution has met termination conditions.
+     */
 	public boolean isTerminated() { return state != RUNNING; }
+	
+    /**
+     * @return Number of active species in current generation.
+     */
 	public int getNumberOfSpecies() { return species.size(); }
+	
+    /**
+     * @return Current compatibility threshold for speciation.
+     */
 	public double getCurrentCompatabilityThreshold() { return compatabilityThreshold; }
 
 	private int terminationCheck() {
@@ -122,10 +147,10 @@ public class Neat {
 		return RUNNING;
 	}
 	
-	/**
-	 * 
-	 * @param print
-	 */
+    /**
+     * Executes one evolutionary generation cycle.
+     * @param printLastGenerationInfo If true, prints generation statistics to console.
+     */
 	public void evolve(boolean printLastGenerationInfo) {
 		
 		int numberOfSpecs = species.size();

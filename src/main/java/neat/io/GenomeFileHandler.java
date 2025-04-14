@@ -11,20 +11,23 @@ import javax.imageio.ImageIO;
 import main.java.neat.core.Genome;
 
 /**
+ * Utility class for handling genome serialization/deserialization and image saving.
+ * Provides static methods to save/load NEAT genomes and export network visualizations.
+ * <p>
+ * This class cannot be instantiated and uses Java object serialization for genome persistence.
  * 
- * @author Gamer
- *
+ * @author Taher Joudeh
  */
 public final class GenomeFileHandler {
 
 	private final static String FILE_FORMAT = "neat";
 	
-	/**
-	 * 
-	 * @param genome
-	 * @param path
-	 * @param name
-	 */
+    /**
+     * Serializes and saves a Genome object to a file in NEAT format.
+     * @param genome The genome to serialize.
+     * @param path Directory path for saving (can be null for current directory).
+     * @param name Filename without extension.
+     */
 	public final static void saveGenome(Genome genome, String path, String name) {
 		String filePath = path+"\\"+name+"."+FILE_FORMAT;
 		if (path == null)
@@ -41,11 +44,11 @@ public final class GenomeFileHandler {
 		} catch (IOException e) { e.printStackTrace(); }
 	}
 	
-	/**
-	 * 
-	 * @param filePath
-	 * @return
-	 */
+    /**
+     * Loads and deserializes a Genome from file.
+     * @param filePath Full path to the genome file (including extension).
+     * @return Deserialized Genome object, or null if loading fails.
+     */
 	public final static Genome loadGenome(String filePath) {
 		Genome genome = null;
 		File file = new File(filePath);
@@ -61,13 +64,13 @@ public final class GenomeFileHandler {
 		return genome;
 	}
 	
-	/**
-	 * 
-	 * @param image
-	 * @param path
-	 * @param name
-	 * @param format
-	 */
+    /**
+     * Saves a network visualization image to disk.
+     * @param image BufferedImage containing network visualization.
+     * @param path Directory path for saving (can be null for current directory).
+     * @param name Filename without extension.
+     * @param format Image format (e.g., "png", "jpg") as supported by ImageIO.
+     */
 	public final static void saveImage(BufferedImage image, String path, String name, String format) {
 		String filePath = path+"\\"+name+"."+format;
 		if (path == null)

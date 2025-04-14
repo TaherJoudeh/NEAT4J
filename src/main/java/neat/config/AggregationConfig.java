@@ -2,7 +2,6 @@ package main.java.neat.config;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import main.java.neat.functions.AggregationFunction;
 import main.java.neat.functions.AggregationFunction.AGGREGATION_FUNCTION;
 
 /**

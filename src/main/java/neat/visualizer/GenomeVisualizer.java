@@ -16,19 +16,34 @@ import main.java.neat.core.Genome;
 import main.java.neat.core.Node;
 
 /**
+ * Renders neural network architectures as visual images. Handles visualization of
+ * genomes including nodes, connections, colors, and shapes based on network properties.
+ * Supports customizable appearance through color schemes and node shapes.
+ * 
+ * <p>Key features:
+ * <ul>
+ * <li>Different colors for input/hidden/output nodes</li>
+ * <li>Visual distinction between positive/negative/recurrent connections</li>
+ * <li>Configurable node shapes and sizes</li>
+ * <li>Transparency support through ARGB images</li>
+ * </ul>
  * 
  * @author Taher Joudeh
- *
  */
 public class GenomeVisualizer {
 
-	/**
-	 * 
-	 * @author Taher Joudeh
-	 *
-	 */
+    /**
+     * Enum representing node visualization shapes.
+     */
 	public static enum SHAPE {
+		/**
+		 * Circular node representation - nodes will be rendered as perfect circles.
+		 */
 		CIRCLE,
+		
+		/**
+		 * Square node representation - nodes will be rendered as squares with equal width and height.
+		 */
 		SQUARE
 	}
 	
@@ -49,30 +64,31 @@ public class GenomeVisualizer {
 	
 	protected String disabledConnectionColor;
 	
-	/**
-	 * Default constructor.
-	 */
+    /**
+     * Protected default constructor for inheritance/configuration purposes.
+     */
 	protected GenomeVisualizer() {
 		/*
 		 * Nothing
 		 */
 	}
 	
-	/**
-	 * 
-	 * @param nodeSize
-	 * @param nodeShape
-	 * @param nodeBoundsColor
-	 * @param nonActivatedNodeColor
-	 * @param inputNodeColor
-	 * @param hiddenNodeColor
-	 * @param outputNodeColor
-	 * @param posConnectionColor
-	 * @param negConnectionColor
-	 * @param posRecurrentConnectionColor
-	 * @param negRecurrentConnectionColor
-	 * @param disabledConnectionColor
-	 */
+    /**
+     * Creates a fully configured visualizer with custom appearance settings.
+     * 
+     * @param nodeSize               Diameter/width of nodes in pixels.
+     * @param nodeShape              Geometric shape for nodes (CIRCLE/SQUARE).
+     * @param nodeBoundsColor        Border color in hex format (#RRGGBB).
+     * @param nonActivatedNodeColor  Color for inactive nodes.
+     * @param inputNodeColor         Color for input layer nodes.
+     * @param hiddenNodeColor        Color for hidden layer nodes.
+     * @param outputNodeColor        Color for output layer nodes.
+     * @param posConnectionColor     Color for positive-weight connections.
+     * @param negConnectionColor     Color for negative-weight connections.
+     * @param posRecurrentConnectionColor Color for positive recurrent connections.
+     * @param negRecurrentConnectionColor Color for negative recurrent connections.
+     * @param disabledConnectionColor Color for disabled connections.
+     */
 	protected GenomeVisualizer(double nodeSize, SHAPE nodeShape, String nodeBoundsColor, String nonActivatedNodeColor,
 			String inputNodeColor, String hiddenNodeColor, String outputNodeColor, String posConnectionColor,
 			String negConnectionColor, String posRecurrentConnectionColor, String negRecurrentConnectionColor,
@@ -91,31 +107,79 @@ public class GenomeVisualizer {
 		this.disabledConnectionColor = disabledConnectionColor;
 	}
 	
+    /**
+     * @return Diameter/width of nodes in pixels for visualization.
+     */
 	public double getNodeSize() { return nodeSize; }
+	
+    /**
+     * @return Currently configured node geometry shape.
+     */
 	public SHAPE getNodeShape() { return nodeShape; }
+	
+    /**
+     * @return Hexadecimal color code for node borders.
+     */
 	public String getNodeBoundsColor() { return nodeBoundsColor; }
+	
+    /**
+     * @return Hexadecimal color code for inactive nodes.
+     */
 	public String getNonActivatedNodeColor() { return nonActivatedNodeColor; }
+	
+    /**
+     * @return Hexadecimal color code for input layer nodes.
+     */
 	public String getInputNodeColor() { return inputNodeColor; }
+	
+    /**
+     * @return Hexadecimal color code for hidden layer nodes.
+     */
 	public String getHiddenNodeColor() { return hiddenNodeColor; }
+	
+    /**
+     * @return Hexadecimal color code for output layer nodes.
+     */
 	public String getOutputNodeColor() { return outputNodeColor; }
+	
+    /**
+     * @return Hexadecimal color code for positive-weight connections.
+     */
 	public String getPosConnectionColor() { return posConnectionColor; }
+	
+    /**
+     * @return Hexadecimal color code for negative-weight connections.
+     */
 	public String getNegConnectionColor() { return negConnectionColor; }
+	
+    /**
+     * @return Hexadecimal color code for positive recurrent connections.
+     */
 	public String getPosRecurrentConnectionColor() { return posRecurrentConnectionColor; }
+	
+    /**
+     * @return Hexadecimal color code for negative recurrent connections.
+     */
 	public String getNegRecurrentConnectionColor() { return negRecurrentConnectionColor; }
+	
+    /**
+     * @return Hexadecimal color code for disabled connections.
+     */
 	public String getDisabledConnectionColor() { return disabledConnectionColor; }
 	
-	/**
-	 * 
-	 * @param visualizer
-	 * @param backgroundColor
-	 * @param drawDisabled
-	 * @param activateAll
-	 * @param genome
-	 * @param maxWeightValue
-	 * @param width
-	 * @param height
-	 * @return
-	 */
+    /**
+     * Generates visualization image of a genome's neural network.
+     * 
+     * @param visualizer         Configured visualizer instance.
+     * @param backgroundColor    Background color in hex format (#RRGGBB) or null for transparent.
+     * @param drawDisabled       Whether to render disabled connections.
+     * @param activateAll        Force all nodes to appear activated.
+     * @param genome             Genome to visualize.
+     * @param maxWeightValue     Maximum weight value for connection thickness scaling.
+     * @param width              Image width in pixels.
+     * @param height             Image height in pixels.
+     * @return BufferedImage containing network visualization.
+     */
 	public static BufferedImage visualizeGenome(GenomeVisualizer visualizer, String backgroundColor, boolean drawDisabled,
 			boolean activateAll, Genome genome, double maxWeightValue, int width, int height) {
 		
