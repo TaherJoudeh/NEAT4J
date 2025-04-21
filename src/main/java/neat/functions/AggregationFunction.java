@@ -270,7 +270,7 @@ class MaxabsAggregationFunction extends AggregationFunction {
      */
 	@Override
 	public double aggregate(double[] x) {
-		return Arrays.stream(x).reduce(1, (a,b) -> Math.max(Math.abs(a), Math.abs(b)));
+		return Arrays.stream(x).reduce(0, (a,b) -> Math.max(Math.abs(a), Math.abs(b)));
 	}
 	
 }
