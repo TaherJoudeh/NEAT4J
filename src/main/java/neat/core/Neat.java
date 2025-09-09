@@ -534,8 +534,12 @@ public class Neat {
 			double runningSum = 0;
 			
 			int i = -1;
-			while (runningSum < stopThreshold)
-				runningSum += selectionPool.get(++i).getFitness();
+			while (runningSum < stopThreshold) {
+				if (neatConfig.getFitnessCriterion() == FITNESS_CRITERION.MAX)
+					runningSum += selectionPool.get(++i).getFitness();
+				else if (neatConfig.getFitnessCriterion() == FITNESS_CRITERION.MIN)
+						runningSum += 1d/(1d+selectionPool.get(++i).getFitness());
+			}
 			
 			return selectionPool.get(i);
 			
