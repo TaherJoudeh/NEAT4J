@@ -163,29 +163,101 @@ Agent agent = new Agent(genome);
 ## Configuration Parameters
 
 ### Population Settings
-- `populationSize`: Number of individuals in population
-- `elitism`: Number of best individuals preserved each generation
-- `survivalThreshold`: Fraction of population selected for reproduction
-- `selectionType`: Selection method (ROULETTE_WHEEL, TOURNAMENT)
+- `populationSize`: Number of individuals in population (default: 1)
+- `fitnessCriterion`: Optimization direction - MAX or MIN (default: MAX)
+- `elitism`: Number of best individuals preserved each generation (default: 0)
+- `survivalThreshold`: Fraction of population selected for reproduction (default: 0.5)
+- `selectionType`: Selection method - ROULETTE_WHEEL or TOURNAMENT (default: ROULETTE_WHEEL)
+- `tournamentSize`: Number of genomes in tournament selection (default: 1)
 
-### Mutation Parameters
-- `probAddNode`: Probability of adding a new node (default: 0.01)
-- `probAddConnection`: Probability of adding a new connection (default: 0.03)
-- `probDeleteNode`: Probability of deleting a node (default: 0)
-- `probDeleteConnection`: Probability of deleting a connection (default: 0)
-- `weightMutationPower`: Magnitude of weight mutations (default: 0.1)
-- `biasMutationPower`: Magnitude of bias mutations (default: 0.1)
+### Termination Conditions
+- `fitnessTermination`: Enable fitness-based termination (default: false)
+- `fitnessTerminationThreshold`: Fitness threshold for termination (default: 0)
+- `generationTermination`: Enable generation-based termination (default: false)
+- `generationTerminationThreshold`: Maximum number of generations (default: 0)
 
-### Speciation Settings
+### Speciation Parameters
 - `compatibilityThreshold`: Threshold for species membership (default: 3.0)
+- `compatibilityExcessCoefficient`: Weight for excess genes in distance calculation (default: 1.0)
+- `compatibilityDisjointCoefficient`: Weight for disjoint genes in distance calculation (default: 1.0)
+- `compatibilityWeightCoefficient`: Weight for weight differences in distance calculation (default: 0.5)
+- `dynamicCompatibilityThreshold`: Enable dynamic threshold adjustment (default: false)
+- `targetNumberOfSpecies`: Target number of species for dynamic threshold (default: 1)
+- `compatibilityThresholdAdjustingFactor`: Factor for threshold adjustment (default: 0.1)
+- `speciesFitnessFunction`: Species fitness calculation - MIN, MAX, MEAN, MEDIAN (default: MEAN)
 - `stagnation`: Generations before species elimination (default: 15)
 - `speciesElitism`: Number of species protected from elimination (default: 0)
 
-### Termination Conditions
-- `fitnessTermination`: Enable fitness-based termination
-- `fitnessTerminationThreshold`: Fitness threshold for termination
-- `generationTermination`: Enable generation-based termination
-- `generationTerminationThreshold`: Maximum number of generations
+### Network Structure
+- `numberOfInputs`: Number of input nodes (required)
+- `numberOfOutputs`: Number of output nodes (required)
+- `startingHiddenNodes`: Array of hidden layer sizes (default: empty array)
+- `maxNumberOfHiddenNodes`: Maximum hidden nodes allowed (default: Integer.MAX_VALUE)
+- `initConnectivity`: Initial connection pattern (default: UNCONNECTED)
+- `feedForward`: Restrict to feed-forward networks (default: true)
+
+### Activation Functions
+- `startingActivationFunctionForHiddenNode`: Default activation for hidden nodes (default: SIGMOID)
+- `startingActivationFunctionForOutputNode`: Default activation for output nodes (default: SIGMOID)
+- `activationDefault`: Default activation for new nodes (default: SIGMOID)
+- `activationMutationRate`: Probability of changing activation function (default: 0)
+- `activationConfig`: Configuration of available activation functions
+
+### Aggregation Functions
+- `startingAggregationFunction`: Default aggregation function (default: SUM)
+- `aggregationDefault`: Default aggregation for new nodes (default: SUM)
+- `aggregationMutationRate`: Probability of changing aggregation function (default: 0)
+- `aggregationConfig`: Configuration of available aggregation functions
+
+### Node Mutation Parameters
+- `probAddNode`: Probability of adding a new node (default: 0.01)
+- `probDeleteNode`: Probability of deleting a node (default: 0)
+
+### Connection Mutation Parameters
+- `probAddConnection`: Probability of adding a new connection (default: 0.03)
+- `probDeleteConnection`: Probability of deleting a connection (default: 0)
+- `probRecurrentConnection`: Probability new connection is recurrent (default: 0.1)
+- `probConnectInit`: Connection probability for partial connectivity (default: 0.5)
+
+### Connection Enable/Disable
+- `enabledDefault`: New connections enabled by default (default: true)
+- `enabledMutationRate`: Base probability of toggling connection state (default: 0)
+- `enabledRateForEnabled`: Additional rate for enabled connections (default: 0)
+- `enabledRateForDisabled`: Additional rate for disabled connections (default: 0)
+
+### Weight Parameters
+- `weightInitMean`: Mean for weight initialization (default: 0)
+- `weightInitStdev`: Standard deviation for weight initialization (default: 1)
+- `weightInitDistributionType`: Weight initialization distribution - NORMAL or UNIFORM (default: NORMAL)
+- `weightMaxValue`: Maximum weight value (default: 50)
+- `weightMinValue`: Minimum weight value (default: -50)
+- `weightMutationPower`: Magnitude of weight mutations (default: 0.1)
+- `weightAdjustingRate`: Probability of adjusting weights (default: 0.8)
+- `weightRandomizingRate`: Probability of randomizing weights (default: 0.1)
+
+### Bias Parameters
+- `biasInitMean`: Mean for bias initialization (default: 0)
+- `biasInitStdev`: Standard deviation for bias initialization (default: 1)
+- `biasInitDistributionType`: Bias initialization distribution - NORMAL or UNIFORM (default: NORMAL)
+- `biasMaxValue`: Maximum bias value (default: 50)
+- `biasMinValue`: Minimum bias value (default: -50)
+- `biasMutationPower`: Magnitude of bias mutations (default: 0.1)
+- `biasAdjustingRate`: Probability of adjusting bias (default: 0.8)
+- `biasRandomizingRate`: Probability of randomizing bias (default: 0.1)
+
+### Response Parameters
+- `responseInitMean`: Mean for response initialization (default: 1)
+- `responseInitStdev`: Standard deviation for response initialization (default: 0)
+- `responseInitDistributionType`: Response initialization distribution (default: NORMAL)
+- `responseMaxValue`: Maximum response value (default: 50)
+- `responseMinValue`: Minimum response value (default: -50)
+- `responseMutationPower`: Magnitude of response mutations (default: 0.1)
+- `responseAdjustingRate`: Probability of adjusting response (default: 0.7)
+- `responseRandomizingRate`: Probability of randomizing response (default: 0.1)
+
+### Structural Mutation Control
+- `singleStructuralMutation`: Allow only one structural change per genome (default: false)
+- `structuralMutationAdvisor`: Enable intelligent mutation guidance (default: false)
 
 ## Examples
 
