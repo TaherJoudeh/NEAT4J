@@ -305,7 +305,7 @@ public class Genome implements Serializable {
 						));
 				node.randomizeBias(neatConfig.getBiasInitMean(),neatConfig.getBiasInitStdev(),neatConfig.getBiasInitDistributionType(),
 						neatConfig.getBiasMaxValue(),neatConfig.getBiasMinValue());
-				node.randomizeResponse(neatConfig.getResponseInitMean(),neatConfig.getResponseInitStdev(),neatConfig.getBiasInitDistributionType(),
+				node.randomizeResponse(neatConfig.getResponseInitMean(),neatConfig.getResponseInitStdev(),neatConfig.getResponseInitDistributionType(),
 						neatConfig.getResponseMaxValue(),neatConfig.getResponseMinValue());
 				
 				nodes.add(node);
@@ -325,7 +325,7 @@ public class Genome implements Serializable {
 					));
 			node.randomizeBias(neatConfig.getBiasInitMean(),neatConfig.getBiasInitStdev(),neatConfig.getBiasInitDistributionType(),
 					neatConfig.getBiasMaxValue(),neatConfig.getBiasMinValue());
-			node.randomizeResponse(neatConfig.getResponseInitMean(),neatConfig.getResponseInitStdev(),neatConfig.getBiasInitDistributionType(),
+			node.randomizeResponse(neatConfig.getResponseInitMean(),neatConfig.getResponseInitStdev(),neatConfig.getResponseInitDistributionType(),
 					neatConfig.getResponseMaxValue(),neatConfig.getResponseMinValue());
 			
 			nodes.add(node);
@@ -639,7 +639,7 @@ public class Genome implements Serializable {
 		connection.setEnabled(neatConfig.enabledDefault());
 
 		if (weight == Connection.VOID_DOUBLE_VALUE)
-			connection.randomizeWeight(neatConfig.getWeightInitMean(), neatConfig.getWeightInitStdev(), neatConfig.getBiasInitDistributionType(),
+			connection.randomizeWeight(neatConfig.getWeightInitMean(), neatConfig.getWeightInitStdev(), neatConfig.getWeightInitDistributionType(),
 				neatConfig.getWeightMaxValue(), neatConfig.getWeightMinValue());
 		else connection.setWeight(Math.max(Math.min(neatConfig.getWeightMaxValue(), weight), neatConfig.getWeightMinValue()));
 		
@@ -791,7 +791,7 @@ public class Genome implements Serializable {
 					if (random.nextDouble() < neatConfig.getWeightAdjustingRate())
 						connection.adjustWeight(neatConfig.getWeightMutationPower(), neatConfig.getWeightMaxValue(), neatConfig.getWeightMinValue());
 					else if (random.nextDouble() < neatConfig.getWeightRandomizingRate())
-						connection.randomizeWeight(neatConfig.getWeightInitMean(), neatConfig.getWeightInitStdev(), neatConfig.getBiasInitDistributionType(),
+						connection.randomizeWeight(neatConfig.getWeightInitMean(), neatConfig.getWeightInitStdev(), neatConfig.getWeightInitDistributionType(),
 								neatConfig.getWeightMaxValue(), neatConfig.getWeightMinValue());
 					
 					double totalProbForEnable = neatConfig.getEnabledMutationRate();
