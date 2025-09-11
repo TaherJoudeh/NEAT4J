@@ -958,7 +958,7 @@ public class Genome implements Serializable {
 				if (child.random.nextDouble() < 0.5)
 					child.connections.get(indexInChildConnections).setWeight(connection.getWeight());
 				if (child.connections.get(indexInChildConnections).isEnabled() ^ connection.isEnabled()) {
-					if (child.random.nextDouble() < 0.25)
+					if (child.random.nextDouble() < 0.5)
 						child.connections.get(indexInChildConnections).setEnabled(true);
 					else child.connections.get(indexInChildConnections).setEnabled(false);
 				}
