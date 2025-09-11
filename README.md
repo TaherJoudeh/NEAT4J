@@ -165,7 +165,7 @@ Agent agent = new Agent(genome);
 ### Population Settings
 - `populationSize`: Number of individuals in population (default: 1)
 - `fitnessCriterion`: Optimization direction - MAX or MIN (default: MAX)
-- `elitism`: Number of best individuals preserved each generation (default: 0)
+- `elitism`: Number of best individuals preserved each generation within each species (default: 0)
 - `survivalThreshold`: Fraction of population selected for reproduction (default: 0.5)
 - `selectionType`: Selection method - ROULETTE_WHEEL or TOURNAMENT (default: ROULETTE_WHEEL)
 - `tournamentSize`: Number of genomes in tournament selection (default: 1)
