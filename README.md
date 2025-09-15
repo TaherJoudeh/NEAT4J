@@ -355,6 +355,9 @@ src/main/java/neat/
     └── GenomeVisualizerBuilder.java
 ```
 
+## Examples
+- [Google Dino Game](https://github.com/TaherJoudeh/NEAT-Dino-Game)
+
 ## Acknowledgments
 
 - Kenneth O. Stanley and Risto Miikkulainen for the original NEAT algorithm
