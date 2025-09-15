@@ -355,7 +355,7 @@ src/main/java/neat/
     └── GenomeVisualizerBuilder.java
 ```
 
-## Examples
+## Other Examples
 - [Google Dino Game](https://github.com/TaherJoudeh/NEAT-Dino-Game)
 
 ## Acknowledgments
