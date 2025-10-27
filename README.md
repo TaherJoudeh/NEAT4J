@@ -358,6 +358,10 @@ src/main/java/neat/
 ## Other Examples
 - [Google Dino Game](https://github.com/TaherJoudeh/NEAT-Dino-Game)
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 ## Acknowledgments
 
 - Kenneth O. Stanley and Risto Miikkulainen for the original NEAT algorithm
