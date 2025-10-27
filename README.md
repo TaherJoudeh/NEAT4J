@@ -1,5 +1,9 @@
 # NEAT4J
 
+![Java](https://img.shields.io/badge/Java-8%2B-blue?logo=openjdk)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Release](https://img.shields.io/badge/Release-v1.0.0-orange)
+
 A comprehensive Java implementation of NEAT (NeuroEvolution of Augmenting Topologies) for evolving neural network architectures through genetic algorithms.
 
 ## Overview
@@ -19,7 +23,7 @@ NEAT4J provides a complete implementation of the NEAT algorithm with extensive c
 ## Installation
 
 ### Option 1: JAR File
-Download `neat4j.jar` and add it to your project classpath.
+Download `neat4j.jar` and add it to your project classpath, or download [NEAT4J v1.0.0](https://github.com/TaherJoudeh/NEAT4J/releases/tag/V1.0.0)
 
 ### Option 2: Source Code
 ```bash
