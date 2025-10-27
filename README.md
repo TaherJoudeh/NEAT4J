@@ -6,9 +6,13 @@
 
 A comprehensive Java implementation of NEAT (NeuroEvolution of Augmenting Topologies) for evolving neural network architectures through genetic algorithms.
 
+---
+
 ## Overview
 
 NEAT4J provides a complete implementation of the NEAT algorithm with extensive configuration options, visualization capabilities, and file persistence. The library evolves both neural network weights and topologies, making it suitable for problems where the optimal network structure is unknown.
+
+---
 
 ## Features
 
@@ -19,6 +23,8 @@ NEAT4J provides a complete implementation of the NEAT algorithm with extensive c
 - **Network Visualization**: Customizable genome visualization with export capabilities
 - **Persistence**: Save and load evolved networks using Java serialization
 - **Zero Dependencies**: Pure Java implementation with no external requirements
+
+---
 
 ## Installation
 
@@ -31,6 +37,8 @@ git clone https://github.com/TaherJoudeh/NEAT4J.git
 ```
 
 **Requirements**: Java 8 or higher
+
+---
 
 ## Quick Start
 
@@ -78,6 +86,8 @@ for (int i = 0; i < inputs.length; i++) {
 }
 ```
 
+---
+
 ## Configuration
 
 ### Basic Configuration
@@ -122,6 +132,8 @@ NEATConfig config = new NEATConfigBuilder(150, 8, 3)
     .build();
 ```
 
+---
+
 ## Network Visualization
 
 ```java
@@ -151,6 +163,8 @@ BufferedImage image = GenomeVisualizer.visualizeGenome(
 GenomeFileHandler.saveImage(image, "./output", "network", "png");
 ```
 
+---
+
 ## File Operations
 
 ### Save and Load Genomes
@@ -163,6 +177,8 @@ GenomeFileHandler.saveGenome(agent.getGenome(), "./models", "best_network");
 Genome genome = GenomeFileHandler.loadGenome("./models/best_network.neat");
 Agent agent = new Agent(genome);
 ```
+
+---
 
 ## Configuration Parameters
 
@@ -263,6 +279,8 @@ Agent agent = new Agent(genome);
 - `singleStructuralMutation`: Allow only one structural change per genome (default: false)
 - `structuralMutationAdvisor`: Enable intelligent mutation guidance (default: false)
 
+---
+
 ## Examples
 
 ### Control Problem
@@ -332,6 +350,8 @@ public class ClassificationEvolution {
 }
 ```
 
+---
+
 ## Project Structure
 
 ```
@@ -359,15 +379,31 @@ src/main/java/neat/
     └── GenomeVisualizerBuilder.java
 ```
 
+---
+
 ## Other Examples
 - [Google Dino Game](https://github.com/TaherJoudeh/NEAT-Dino-Game)
+
+---
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
 
 ## Acknowledgments
 
 - Kenneth O. Stanley and Risto Miikkulainen for the original NEAT algorithm
 - [Original NEAT Paper](https://nn.cs.utexas.edu/downloads/papers/stanley.cec02.pdf)
 - [NEAT-Python](https://neat-python.readthedocs.io/en/latest/) for API design inspiration
+
+---
+
+## ⭐ Support
+
+If you found this simulator interesting or useful for learning:
+- Give it a star ⭐
+- Fork it and experiment 🍴
+- Share with physics/CS students 📚
+- Open issues for bugs or questions 🐛
