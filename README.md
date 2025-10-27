@@ -405,5 +405,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you found this simulator interesting or useful for learning:
 - Give it a star ⭐
 - Fork it and experiment 🍴
-- Share with physics/CS students 📚
 - Open issues for bugs or questions 🐛
