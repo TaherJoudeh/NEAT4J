@@ -489,7 +489,6 @@ public class Genome implements Serializable {
 		
 		Queue<Node> nodes = new LinkedList<> ();
 		HashMap<Node,Integer> nodeLayer = new HashMap<> ();
-		int count = 0;
 		
 		for (Node node: inputNodes) {
 			for (Connection connection: node.getOutConnections()) {
@@ -516,11 +515,6 @@ public class Genome implements Serializable {
 				nodes.add(toNode);
 			}
 			
-			count++;
-			if (count > 50000) {
-				System.out.println(this);
-				System.exit(0);
-			}
 		}
 		
 		int max = 0;
