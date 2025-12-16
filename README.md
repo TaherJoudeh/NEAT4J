@@ -29,7 +29,7 @@ NEAT4J provides a complete implementation of the NEAT algorithm with extensive c
 ## Installation
 
 ### Option 1: JAR File
-Download [NEAT4J v1.0.0](https://github.com/TaherJoudeh/NEAT4J/releases/tag/V1.0.0) and add neat4j.jar to your project path
+Download [NEAT4J v1.0.1](https://github.com/TaherJoudeh/NEAT4J/releases/tag/V1.0.1) and add neat4j.jar to your project path
 
 ### Option 2: Source Code
 ```bash
