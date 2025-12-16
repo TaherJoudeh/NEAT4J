@@ -288,12 +288,15 @@ public class Neat {
 	
 	private void speciate() {
 		
+		for (Species species: species)
+			species.updateRepresentative();
+		
 		clearSpecies();
 		for (int i = 0; i < neatConfig.getPopulationSize(); i++) {
 			double min = Double.POSITIVE_INFINITY;
 			Species s = null;
 			for (Species species: species) {
-				double dist = Genome.distance(population[i].getGenome(), species.representative.getGenome());
+				double dist = Genome.distance(population[i].getGenome(), species.representative);
 				if (dist < min) {
 					min = dist;
 					s = species;
@@ -356,7 +359,7 @@ public class Neat {
 		private Random random;
 		private int number;
 		
-		private Agent representative;
+		private Genome representative;
 		private LinkedList<Agent> agents;
 		private LinkedList<Agent> selectionPool;
 		
@@ -375,7 +378,7 @@ public class Neat {
 		private Species(Agent agent) {
 			this();
 			agent.setSpeciesNumber(number);
-			representative = agent;
+			representative = agent.getGenome().clone();
 			agents.add(agent);
 		}
 		
@@ -471,6 +474,10 @@ public class Neat {
 		
 		private Agent getRandomAgent() {
 			return agents.get(random.nextInt(agents.size()));
+		}
+		
+		private void updateRepresentative() {
+			representative = getRandomAgent().getGenome().clone();
 		}
 		
 		private LinkedList<Genome> reproduce() {
