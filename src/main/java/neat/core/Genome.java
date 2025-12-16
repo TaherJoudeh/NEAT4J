@@ -1,11 +1,15 @@
 package main.java.neat.core;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
+import java.util.Stack;
 import java.util.stream.Collectors;
+
 import main.java.neat.config.NEATConfig;
 import main.java.neat.core.Node.TYPE;
 import main.java.neat.functions.ActivationFunction;
@@ -33,32 +37,32 @@ public class Genome implements Serializable {
 	/**
 	 * All nodes in the genome (input, hidden, and output nodes).
 	 */
-	private LinkedList<Node> nodes;
+	private ArrayList<Node> nodes;
 	
 	/**
 	 * All connections between nodes in the genome.
 	 */
-	private LinkedList<Connection> connections;
+	private ArrayList<Connection> connections;
 	
 	/**
 	 * Subset of nodes designated as network inputs.
 	 */
-	private LinkedList<Node> inputNodes;
+	private ArrayList<Node> inputNodes;
 	
 	/**
 	 * Subset of nodes in hidden layers.
 	 */
-	private LinkedList<Node> hiddenNodes;
+	private ArrayList<Node> hiddenNodes;
 	
 	/**
 	 * Subset of nodes designated as network outputs.
 	 */
-	private LinkedList<Node> outputNodes;
+	private ArrayList<Node> outputNodes;
 	
 	/**
 	 * Nodes organized by layer index (0 = input, 1..n = hidden layers, last = output).
 	 */
-	private LinkedList<Node>[] nodesByLayer;
+	private ArrayList<Node>[] nodesByLayer;
 	
 	/**
 	 * Number of hidden layers in the network architecture.
@@ -105,12 +109,12 @@ public class Genome implements Serializable {
 	protected Genome(NEATConfig neatConfig, boolean init) {
 		random = new Random();
 		this.neatConfig = neatConfig;
-		nodes = new LinkedList<> ();
-		connections = new LinkedList<> ();
+		nodes = new ArrayList<> ();
+		connections = new ArrayList<> ();
 		
-		inputNodes = new LinkedList<> ();
-		hiddenNodes = new LinkedList<> ();
-		outputNodes = new LinkedList<> ();
+		inputNodes = new ArrayList<> ();
+		hiddenNodes = new ArrayList<> ();
+		outputNodes = new ArrayList<> ();
 		
 		nodesCoordinates = new HashMap<> ();
 		width = 0;
@@ -140,32 +144,32 @@ public class Genome implements Serializable {
     /**
      * @return List of input nodes (copied list).
      */
-	public LinkedList<Node> getInputNodes() { return new LinkedList<Node> (inputNodes); }
+	public ArrayList<Node> getInputNodes() { return new ArrayList<Node> (inputNodes); }
 	
 	/**
      * @return List of hidden nodes (copied list).
      */
-	public LinkedList<Node> getHiddenNodes() { return new LinkedList<Node> (hiddenNodes); }
+	public ArrayList<Node> getHiddenNodes() { return new ArrayList<Node> (hiddenNodes); }
 	
 	/**
      * @return List of output nodes (copied list).
      */
-	public LinkedList<Node> getOutputNodes() { return new LinkedList<Node> (outputNodes); }
+	public ArrayList<Node> getOutputNodes() { return new ArrayList<Node> (outputNodes); }
 	
 	/**
      * @return List of all nodes (copied list).
      */
-	public LinkedList<Node> getNodes() { return new LinkedList<Node> (nodes); }
+	public ArrayList<Node> getNodes() { return new ArrayList<Node> (nodes); }
 	
     /**
      * @return List of all connections (copied list).
      */
-	public LinkedList<Connection> getConnections() { return new LinkedList<Connection> (connections); }
+	public ArrayList<Connection> getConnections() { return new ArrayList<Connection> (connections); }
 	
 	/**
      * @return List of Arrays of all nodes. Each node in it's own layer (copied list).
      */
-	protected LinkedList<Node>[] getNodesByLayers() { return nodesByLayer; }
+	protected ArrayList<Node>[] getNodesByLayers() { return nodesByLayer; }
 	
     /**
      * Gets node coordinates for visualization purposes.
@@ -455,10 +459,10 @@ public class Genome implements Serializable {
 	private void setNodesByLayer() {
 		
 		@SuppressWarnings("unchecked")
-		LinkedList<Node>[] nodesByLayer = new LinkedList[numOfHiddenlayers+2];
+		ArrayList<Node>[] nodesByLayer = new ArrayList[numOfHiddenlayers+2];
 		
 		for (int i = 0; i < numOfHiddenlayers+2; i++)
-			nodesByLayer[i] = new LinkedList<> ();
+			nodesByLayer[i] = new ArrayList<> ();
 		
 		for (Node node: nodes) {
 			if (node.getType() == TYPE.OUTPUT)
@@ -534,7 +538,6 @@ public class Genome implements Serializable {
 	}
 	
 	private void handleIsolatedNodes() {
-		int count = 0;
 		LinkedList<Node> hNodes = new LinkedList<> (hiddenNodes);
 		hNodes.removeIf(hn -> !hn.isIsolated());
 		while (!hNodes.isEmpty()) {
@@ -543,11 +546,6 @@ public class Genome implements Serializable {
 			if (hNodes.isEmpty()) {
 				hNodes.addAll(hiddenNodes);
 				hNodes.removeIf(hn -> !hn.isIsolated());
-				count++;
-				if (count > 20000) {
-					System.out.println("[handleIsolatedNodes]\n" + this);
-					System.exit(0);
-				}
 			}
 		}
 		setMaxInnovationNumber();
@@ -739,29 +737,52 @@ public class Genome implements Serializable {
 	}
 	private void mutateStructure() {
 						
-		if (mutateAddConnection() && neatConfig.isSingleStructuralMutation())
-			return;
-		if (mutateAddNode() && neatConfig.isSingleStructuralMutation())
-			return;
-		if (mutateDeleteConnection() && neatConfig.isSingleStructuralMutation())
-			return;
+		Stack<Integer> premutations = new Stack<> ();
+		premutations.push(1);
+		premutations.push(2);
+		premutations.push(3);
+		premutations.push(4);
+		Collections.shuffle(premutations);
 		
-		mutateDeleteNode();
+		while (!premutations.isEmpty()) {
+			int roll = premutations.pop();
+			boolean hasMutated = false;
+			switch (roll) {
+			case 1:
+				hasMutated = mutateAddConnection();
+				break;
+			case 2:
+				hasMutated = mutateAddNode();
+				break;
+			case 3:
+				hasMutated = mutateDeleteConnection();
+				break;
+			case 4:
+				hasMutated = mutateDeleteNode();
+				break;
+			}
+			
+			if (neatConfig.isSingleStructuralMutation() && hasMutated)
+				break;
+			
+		}
 				
 	}
 	private void mutateParameters() {
 		
 		for (Node node: nodes) {
 			
-			if (random.nextDouble() < neatConfig.getResponseAdjustingRate())
+			double roll = random.nextDouble();
+			if (roll < neatConfig.getResponseAdjustingRate())
 				node.adjustResponse(neatConfig.getResponseMutationPower(), neatConfig.getResponseMaxValue(), neatConfig.getResponseMinValue());
-			else if (random.nextDouble() < neatConfig.getResponseRandomizingRate())
+			else if (roll < neatConfig.getResponseAdjustingRate() + neatConfig.getResponseRandomizingRate())
 				node.randomizeResponse(neatConfig.getResponseInitMean(), neatConfig.getResponseInitStdev(), neatConfig.getResponseInitDistributionType(),
 						neatConfig.getResponseMaxValue(), neatConfig.getResponseMinValue());
 			
-			if (random.nextDouble() < neatConfig.getBiasAdjustingRate())
+			roll = random.nextDouble();
+			if (roll < neatConfig.getBiasAdjustingRate())
 				node.adjustBias(neatConfig.getBiasMutationPower(), neatConfig.getBiasMaxValue(), neatConfig.getBiasMinValue());
-			else if (random.nextDouble() < neatConfig.getBiasRandomizingRate())
+			else if (roll < neatConfig.getBiasAdjustingRate() + neatConfig.getBiasRandomizingRate())
 				node.randomizeBias(neatConfig.getBiasInitMean(), neatConfig.getBiasInitStdev(), neatConfig.getBiasInitDistributionType(),
 						neatConfig.getBiasMaxValue(), neatConfig.getBiasMinValue()); 
 			
@@ -782,9 +803,10 @@ public class Genome implements Serializable {
 			
 			if (node.hasInputConnections()) {
 				for (Connection connection: node.getInConnections()) {
-					if (random.nextDouble() < neatConfig.getWeightAdjustingRate())
+					roll = random.nextDouble();
+					if (roll < neatConfig.getWeightAdjustingRate())
 						connection.adjustWeight(neatConfig.getWeightMutationPower(), neatConfig.getWeightMaxValue(), neatConfig.getWeightMinValue());
-					else if (random.nextDouble() < neatConfig.getWeightRandomizingRate())
+					else if (roll < neatConfig.getWeightAdjustingRate() + neatConfig.getWeightRandomizingRate())
 						connection.randomizeWeight(neatConfig.getWeightInitMean(), neatConfig.getWeightInitStdev(), neatConfig.getWeightInitDistributionType(),
 								neatConfig.getWeightMaxValue(), neatConfig.getWeightMinValue());
 					
@@ -915,14 +937,6 @@ public class Genome implements Serializable {
 		
 		return null;
 	}
-	/*
-	private Connection getConnection(Node from, Node to) {
-		for (Connection connection: connections)
-			if (connection.getFrom().equals(from) && connection.getTo().equals(to))
-				return connection;
-		return null;
-	}
-	*/
 	
     /**
      * Performs crossover operation between two genomes to produce offspring.
@@ -1024,72 +1038,6 @@ public class Genome implements Serializable {
 		
 		return res;
 	}
-	
-	/*
-	private void testConnections(String label) {
-		
-		for (Connection connection: connections) {
-			if (!nodes.contains(connection.getFrom()) || !nodes.contains(connection.getTo())) {
-				System.out.println("[" + label + "] Connection has no source or destination!");
-				System.exit(0);
-			}
-		}
-		
-	}
-	
-	private void testDuplicateNodes(String label) {
-		for (Node node: nodes) {
-			if (nodes.indexOf(node) != nodes.lastIndexOf(node)) {
-				System.out.println("[" + label + "] " + "Duplicate node!");
-				System.exit(0);
-			}
-		}
-	}
-	
-	private void testDuplicateConnections(String label) {
-		for (Connection connection: connections) {
-			if (connections.indexOf(connection) != connections.lastIndexOf(connection)) {
-				System.out.println("[" + label + "] " + "Duplicate connection!");
-				System.exit(0);
-			}
-		}
-	}
-	
-	private void testHasRecurrentConnections(String label) {
-		
-		boolean has = false;
-		String output = "";
-		for (Connection connection: connections)
-			if (connection.getFrom().getLayer() >= connection.getTo().getLayer()) {
-				output += connection + "\n";
-				has = true;
-			}
-		
-		if (has)
-			output = label + "\n" + output + "------------\n";
-		else output = "";
-		
-		System.out.print(output);
-		if (has)
-			System.exit(0);
-	}
-	
-	private void testHasViceVersaConnections(String label) {
-		
-		String output = "";
-		for (Connection connection: connections) {
-			Connection con = getConnection(connection.getTo(), connection.getFrom());
-			if (con != null)
-				output += label + " " + con + "\n";
-		}
-		
-		if (!output.isEmpty()) {
-			System.out.println(output);
-			System.exit(0);
-		}
-		
-	}
-	*/
 	
     /**
      * Helper class for genome visualization data handling.

@@ -1,6 +1,7 @@
 package main.java.neat.core;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -232,7 +233,7 @@ public class Connection implements Serializable {
      * @param nodes List of nodes from parent genome.
      * @return New connected clone with shared node references.
      */
-	protected Connection cloneAndConnect(LinkedList<Node> nodes) {
+	protected Connection cloneAndConnect(ArrayList<Node> nodes) {
 		
 		Connection c = clone();
 		
