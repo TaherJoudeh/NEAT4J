@@ -26,16 +26,16 @@ public class Neat {
 	private Agent[] population;
 	private Agent best, currentBest;
 	private LinkedList<Species> species;
-	private static int speciesNumber;
+	private int speciesNumber;
 	
 	private AggregationFunction speciesFitnessFunction;
 	private AggregationFunction fitnessCriterion;
 	
-	private double compatabilityThreshold;
+	private double compatibilityThreshold;
 	private int generation = 1;
 	private double populationFitness;
 	private double populationAdjustedFitness;
-		
+			
     /**
      * Constructs a NEAT algorithm controller with specified configuration.
      * @param neatConfig Configuration parameters for the NEAT algorithm.
@@ -46,7 +46,7 @@ public class Neat {
 		GENERATION_TERMINATION_MESSAGE = "Terminated due to reaching the generation threshold [generationThreshold: " + neatConfig.getGenerationTerminationThreshold() + "]";
 		FITNESS_TERMINATION_MESSAGE = "Terminated due to reaching the fitness threshold [fitnessThreshold: " + neatConfig.getFitnessTerminationThreshold() + "]";
 		
-		this.compatabilityThreshold = neatConfig.getCompatabilityThreshold();
+		this.compatibilityThreshold = neatConfig.getCompatibilityThreshold();
 		init();
 	}
 	
@@ -122,7 +122,7 @@ public class Neat {
     /**
      * @return Current compatibility threshold for speciation.
      */
-	public double getCurrentCompatabilityThreshold() { return compatabilityThreshold; }
+	public double getCurrentCompatibilityThreshold() { return compatibilityThreshold; }
 
 	private int terminationCheck() {
 		
@@ -177,7 +177,9 @@ public class Neat {
 		}
 		
 		cull();
-		giveNumberOfOffspring();
+		calculatePopulationAdjustedFitness();
+		int totalElites = allocateElites();
+		allocateOffspring(totalElites);
 		fillElitesGenomes(nextGeneration);
 		fillReproducedGenomes(nextGeneration);
 		fillNewGenomes(nextGeneration);
@@ -201,67 +203,104 @@ public class Neat {
 		else species.sort((s1,s2) -> Double.compare(s2.agents.get(0).getFitness(), s1.agents.get(0).getFitness()));
 	}
 	private void calculateFitness() {
-		for (Species species: species) {
-			species.calculateFitness();
-			species.calculateAdjustedFitness();
+		for (Species s: species) {
+			s.calculateFitness();
+			s.calculateAdjustedFitness();
 		}
 	}
 	private void calculatePopulationFitness() {
 		populationFitness = 0;
-		populationAdjustedFitness = 0;
 	    for (Species s : species) {
-	        for (Agent agent : s.agents) {
-	            populationAdjustedFitness += agent.getAdjustedFitness();
+	        for (Agent agent : s.agents)
 	            populationFitness += agent.getFitness();
-	        }
 	    }
 	    
 	    populationFitness = populationFitness/(double)neatConfig.getPopulationSize();
 	}
 	
+	private void calculatePopulationAdjustedFitness() {
+		populationAdjustedFitness = 0;
+		for (Species s: species)
+			for (Agent agent: s.agents)
+				populationAdjustedFitness += agent.getAdjustedFitness();
+	}
+	
 	private void getCurrentBest() {
-		currentBest = species.getLast().agents.get(0);
+		currentBest = species.getLast().agents.get(0).clone();
 		if (best == null ||
 				(neatConfig.getFitnessCriterion() == FITNESS_CRITERION.MAX && currentBest.getFitness() > best.getFitness()) ||
 				(neatConfig.getFitnessCriterion() == FITNESS_CRITERION.MIN && currentBest.getFitness() < best.getFitness()))
-			best = currentBest;
+			best = currentBest.clone();
 	}
 	
 	private void cull() {
-		for (int i = 0; i < species.size()-neatConfig.getSpeciesElitism(); i++) {
+		for (int i = 0; i < species.size()-neatConfig.getSpeciesElitism(); i++)
 			if (species.get(i).cull())
 				species.remove(i--);
-		}
 	}
 	
-	private void giveNumberOfOffspring() {
-		
-		int numberOfChildren = 0;
-		int numberOfElites = 0;
+	private int allocateElites() {
+		int elites = 0;
+		for (Species s: species) {
+			s.numberOfElites = Math.min(neatConfig.getElitism(), s.size());
+			elites += s.numberOfElites;
+		}
+
 		for (int i = 0; i < species.size(); i++) {
 			
 			double factor = species.get(i).adjustedFitness / populationAdjustedFitness;
-			int numberOfOffspring = (int) Math.round(factor * neatConfig.getPopulationSize()); 
+			int numberOfOffspring = (int) (Math.round(factor * (double) (neatConfig.getPopulationSize()-elites)));
 			
 			if (numberOfOffspring == 0) {
-				species.remove(i--);
-				continue;
+				elites -= species.get(i).numberOfElites;
+				populationAdjustedFitness -= species.get(i).adjustedFitness;
+				species.remove(i);
+				i = -1;
 			}
-			
-			int elites = Math.min(numberOfOffspring, Math.min(species.get(i).size(),neatConfig.getElitism()));
-			numberOfOffspring -= elites;
-						
-			species.get(i).numberOfElites = elites;
-			species.get(i).numberOfOffspring = numberOfOffspring;
-			numberOfChildren += numberOfOffspring;
-			numberOfElites += elites;
 		}
 		
-		numberOfChildren += numberOfElites;
-
-		if (numberOfChildren > neatConfig.getPopulationSize())
-			purgeSpecies(numberOfChildren-neatConfig.getPopulationSize());
+		return elites;
+	}
+	
+	private void allocateOffspring(int totalElites) {
 		
+		int numberOfChildren = 0;
+		for (int i = 0; i < species.size(); i++) {
+			
+			double factor = species.get(i).adjustedFitness / populationAdjustedFitness;
+			int numberOfOffspring = (int) (Math.round(factor * (double) (neatConfig.getPopulationSize()-totalElites)));
+			
+			species.get(i).numberOfOffspring = numberOfOffspring;
+			numberOfChildren += numberOfOffspring;
+		}
+
+		normalizeOffspringAllocation(neatConfig.getPopulationSize()-totalElites-numberOfChildren);		
+	}
+	
+	private void normalizeOffspringAllocation(int diff) {
+		if (species.isEmpty())
+			return;
+		
+		int index = 0;
+		if (diff > 0) {
+			index = species.size()-1;
+			while (diff > 0) {
+				species.get(index).numberOfOffspring++;
+				diff--;
+				index--;
+				if (index < 0)
+					index = species.size()-1;
+			}
+		}else if (diff < 0) {
+			while (diff < 0) {
+				species.get(index).numberOfOffspring--;
+				diff++;
+				index++;
+				if (index >= species.size())
+					index = 0;
+			}
+		}
+
 	}
 	
 	private void fillReproducedGenomes(LinkedList<Genome> nextGenerationGenomes) {
@@ -277,32 +316,32 @@ public class Neat {
 	}
 	
 	private void fillNewGenomes(LinkedList<Genome> nextGenerationGenomes) {
-		int i = 0;
-		while (nextGenerationGenomes.size() < neatConfig.getPopulationSize()) {
-			Genome newGenome = species.get(i%species.size()).getRandomAgent().getGenome().clone();
-			newGenome.mutate();
-			nextGenerationGenomes.add(newGenome);
-			i++;
+		if (species.isEmpty()) {
+			while (nextGenerationGenomes.size() < neatConfig.getPopulationSize()) {
+				Genome genome = new Genome(neatConfig, true);
+				genome.mutate();
+	            nextGenerationGenomes.add(genome);
+	        }
 		}
 	}
 	
 	private void speciate() {
 		
-		for (Species species: species)
-			species.updateRepresentative();
+		for (Species s: species)
+			s.updateRepresentative();
 		
 		clearSpecies();
 		for (int i = 0; i < neatConfig.getPopulationSize(); i++) {
 			double min = Double.POSITIVE_INFINITY;
 			Species s = null;
-			for (Species species: species) {
-				double dist = Genome.distance(population[i].getGenome(), species.representative);
+			for (Species sp: species) {
+				double dist = Genome.distance(population[i].getGenome(), sp.representative);
 				if (dist < min) {
 					min = dist;
-					s = species;
+					s = sp;
 				}
 			}
-			if (s != null && min < compatabilityThreshold)
+			if (s != null && min < compatibilityThreshold)
 				s.add(population[i]);
 			else
 				species.add(new Species(population[i]));
@@ -310,34 +349,6 @@ public class Neat {
 		removeEmptySpecies();
 	}
 	
-	/*
-	private void reinforceSpecies(int exceeding) {
-		int i = species.size()-1;
-//		System.out.println(exceeding);
-		while (exceeding < 0) {
-			Species s = species.get(i);
-			s.numberOfOffspring++;
-			exceeding++;
-			i--;
-			if (i < 0)
-				i = species.size()-1;
-		}
-	}
-	*/
-	
-	private void purgeSpecies(int exceeding) {
-		int i = 0;
-		while (exceeding > 0) {
-			Species s = species.get(i);
-			s.numberOfOffspring--;
-			exceeding--;
-			if (s.numberOfOffspring < 0)
-				species.remove(i--);
-			i++;
-			if (i > species.size()-1)
-				i = 0;
-		}
-	}
 	private void clearSpecies() {
 		for (Species s: species)
 			s.clearSpecies();
@@ -349,9 +360,9 @@ public class Neat {
 	private void adjustCompatabilityThreshold() {
 		int numberOfSpecies = species.size();
 		if (numberOfSpecies > neatConfig.getTargetNumberOfSpecies())
-			compatabilityThreshold *= (1+neatConfig.getCompatabilityThresholdAdjustingFactor());
+			compatibilityThreshold *= (1+neatConfig.getCompatabilityThresholdAdjustingFactor());
 		if (numberOfSpecies < neatConfig.getTargetNumberOfSpecies())
-			compatabilityThreshold *= (1-neatConfig.getCompatabilityThresholdAdjustingFactor());
+			compatibilityThreshold *= (1-neatConfig.getCompatabilityThresholdAdjustingFactor());
 	}
 	
 	private class Species {
@@ -374,6 +385,9 @@ public class Neat {
 			agents = new LinkedList<> ();
 			selectionPool = new LinkedList<> ();
 			number = ++speciesNumber;
+			
+			maxFitness = neatConfig.getFitnessCriterion() == FITNESS_CRITERION.MAX ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY;
+			maxHighscore = neatConfig.getFitnessCriterion() == FITNESS_CRITERION.MAX ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY;
 		}
 		private Species(Agent agent) {
 			this();
@@ -538,14 +552,18 @@ public class Neat {
 		private Agent rouletteWheelSelection(double sum) {
 			
 			double stopThreshold = random.nextDouble()*sum;
+			
 			double runningSum = 0;
 			
-			int i = -1;
-			while (runningSum < stopThreshold) {
+			int i = 0;
+			while (runningSum < stopThreshold && i < selectionPool.size()-1) {
 				if (neatConfig.getFitnessCriterion() == FITNESS_CRITERION.MAX)
-					runningSum += selectionPool.get(++i).getFitness();
+					runningSum += selectionPool.get(i).getFitness();
 				else if (neatConfig.getFitnessCriterion() == FITNESS_CRITERION.MIN)
-						runningSum += 1d/(1d+selectionPool.get(++i).getFitness());
+						runningSum += 1d/(1d+selectionPool.get(i).getFitness());
+				
+				if (runningSum < stopThreshold)
+					i++;
 			}
 			
 			return selectionPool.get(i);

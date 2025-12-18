@@ -732,7 +732,7 @@ public class NEATConfig implements Serializable {
 	 * 
 	 * @return The compatibility threshold value
 	 */
-	public double getCompatabilityThreshold() { return compatibilityThreshold; }
+	public double getCompatibilityThreshold() { return compatibilityThreshold; }
 	
 	/**
 	 * Returns the coefficient for excess genes in compatibility distance calculation.
