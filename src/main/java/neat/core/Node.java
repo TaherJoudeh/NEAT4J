@@ -24,6 +24,8 @@ public class Node implements Serializable {
 
 	private static final long serialVersionUID = -2812820096558333256L;
 
+	private transient Random random = new Random();
+	
     /**
      * Enum representing node types in the neural network.
      */
@@ -209,7 +211,7 @@ public class Node implements Serializable {
      * @param biasMinValue Minimum allowed bias value.
      */
 	protected void adjustBias(double biasMutationPower, double biasMaxValue, double biasMinValue) {
-		bias += new Random().nextGaussian()*biasMutationPower;
+		bias += random.nextGaussian()*biasMutationPower;
 		bias = Math.max(Math.min(biasMaxValue, bias), biasMinValue);
 	}
 	
@@ -224,7 +226,6 @@ public class Node implements Serializable {
 	protected void randomizeBias(double biasMean, double biasStdev, DISTRIBUTION distribution, double biasMaxValue, double biasMinValue) {
 		
 		double newBias = 0;
-		Random random = new Random();
 		
 		switch (distribution) {
 		case NORMAL:
@@ -252,7 +253,7 @@ public class Node implements Serializable {
      * @param responseMinValue Minimum allowed response value.
      */
 	protected void adjustResponse(double responseMutationPower, double responseMaxValue, double responseMinValue) {
-		response += new Random().nextGaussian()*responseMutationPower;
+		response += random.nextGaussian()*responseMutationPower;
 		response = Math.max(Math.min(responseMaxValue, response), responseMinValue);
 	}
 	
@@ -267,7 +268,6 @@ public class Node implements Serializable {
 	protected void randomizeResponse(double responseMean, double responseStdev, DISTRIBUTION distribution, double responseMaxValue, double responseMinValue) {
 		
 		double newResponse = 0;
-		Random random = new Random();
 		
 		switch (distribution) {
 		case NORMAL:

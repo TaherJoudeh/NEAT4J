@@ -31,6 +31,8 @@ public class Connection implements Serializable {
 	private static LinkedList<Connection> innovationHistory = new LinkedList<> ();
 	private static int globalInnovationNumber;
 	
+	private transient Random random = new Random();
+	
 	/**
 	 * Connection weight determining signal strength/amplification.
 	 */
@@ -111,7 +113,7 @@ public class Connection implements Serializable {
      * @param weightMinValue Minimum allowed weight value.
      */
 	protected void adjustWeight(double weightMutationPower, double weightMaxValue, double weightMinValue) {
-		weight += new Random().nextGaussian()*weightMutationPower;
+		weight += random.nextGaussian()*weightMutationPower;
 		weight = Math.max(Math.min(weightMaxValue, weight), weightMinValue);
 	}
 	
@@ -125,7 +127,6 @@ public class Connection implements Serializable {
      */
 	protected void randomizeWeight(double weightMean, double weightStdev, NEATConfig.DISTRIBUTION distribution, double weightMaxValue, double weightMinValue) {
 		double newWeight = 0;
-		Random random = new Random();
 		
 		switch (distribution) {
 		case NORMAL:
