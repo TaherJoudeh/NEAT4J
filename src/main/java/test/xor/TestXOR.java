@@ -50,7 +50,7 @@ public class TestXOR {
 				.setCompatibilityWeightCoefficient(0.4)
 				
 				.setCompatibilityThreshold(5)
-				.setDynamicCompatabilityThreshold(true)
+				.setDynamicCompatibilityThreshold(true)
 				.setCompatabilityThresholdAdjustingFactor(0.2)
 				.setTargetNumberOfSpecies(20)
 				.setSpeciesFitnessFunction(SPECIES_FITNESS_FUNCTION.MAX)

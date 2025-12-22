@@ -333,8 +333,8 @@ public class NEATConfigBuilder {
      * @param dynamicCompatabilityThreshold true to enable dynamic adjustment.
      * @return This builder instance for method chaining.
      */
-	public NEATConfigBuilder setDynamicCompatabilityThreshold(boolean dynamicCompatabilityThreshold) {
-		neatConfig.dynamicCompatibilityThreshold = dynamicCompatabilityThreshold;
+	public NEATConfigBuilder setDynamicCompatibilityThreshold(boolean dynamicCompatibilityThreshold) {
+		neatConfig.dynamicCompatibilityThreshold = dynamicCompatibilityThreshold;
 		return this;
 	}
 	
