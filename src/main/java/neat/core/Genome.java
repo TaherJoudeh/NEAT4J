@@ -578,21 +578,14 @@ public class Genome implements Serializable {
 		Node node1 = null, node2 = null;
 		
 		if (!neatConfig.isFeedForward() && random.nextDouble() < neatConfig.getProbRecurrentConnection()) {
-			
 			int randomLayer = random.nextInt(numOfLayers-1)+1;
 			int secondRandomLayer = random.nextInt(randomLayer)+1;
 			
 			int sizeOfRandomLayer = nodesByLayer[randomLayer].size();
 			int sizeOfSecondRandomLayer = nodesByLayer[secondRandomLayer].size();
 			
-			if (randomLayer == secondRandomLayer) {
-				Node node = nodesByLayer[randomLayer].get(random.nextInt(sizeOfRandomLayer));
-				node1 = node;
-				node2 = node;
-			} else {
-				node1 = nodesByLayer[randomLayer].get(random.nextInt(sizeOfRandomLayer));
-				node2 = nodesByLayer[secondRandomLayer].get(random.nextInt(sizeOfSecondRandomLayer));
-			}
+			node1 = nodesByLayer[randomLayer].get(random.nextInt(sizeOfRandomLayer));
+			node2 = nodesByLayer[secondRandomLayer].get(random.nextInt(sizeOfSecondRandomLayer));
 		}else {
 			int randomLayer = random.nextInt(numOfLayers-1);
 			int secondRandomLayer = random.nextInt(numOfLayers-(randomLayer+1))+(randomLayer+1);
