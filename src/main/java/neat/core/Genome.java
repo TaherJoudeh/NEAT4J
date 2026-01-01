@@ -558,14 +558,9 @@ public class Genome implements Serializable {
 		LinkedList<Connection> recCon = new LinkedList<> (connections);
 		recCon.removeIf(c -> !c.isRecurrent());
 		
-		for (Connection recC: recCon) {
-			if (recC.getFrom() == recC.getTo())
-				continue;
-			if (recC.getFrom().getLayer() == recC.getTo().getLayer())
-				recC.setEnabled(false);
-			else if (recC.getFrom().getLayer() < recC.getTo().getLayer())
+		for (Connection recC: recCon)
+			if (recC.getFrom().getLayer() < recC.getTo().getLayer())
 				recC.setRecurrent(false);
-		}
 	}
 	
 	// Genome modifications
