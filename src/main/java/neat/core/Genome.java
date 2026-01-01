@@ -571,8 +571,8 @@ public class Genome implements Serializable {
 		if (random.nextDouble() >= neatConfig.getProbAddConnection())
 			return false;
 
-		Node node1 = getRandomNode();
-		Node node2 = getRandomNode();
+		Node node1 = getRandomNode(true);
+		Node node2 = getRandomNode(false);
 		
 		Connection newConnection = new Connection(node1,node2);
 		int index = connections.indexOf(newConnection);
@@ -911,8 +911,11 @@ public class Genome implements Serializable {
 		return null;
 	}
 	
-	private Node getRandomNode() {
-		return nodes.get(random.nextInt(nodes.size()));
+	private Node getRandomNode(boolean includeInputs) {
+		LinkedList<Node> pool = new LinkedList<> (nodes);
+		if (!includeInputs)
+			pool.removeIf(n -> n.getType() == TYPE.INPUT);
+		return pool.get(random.nextInt(pool.size()));
 	}
 	
     /**
