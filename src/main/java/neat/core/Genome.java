@@ -206,18 +206,17 @@ public class Genome implements Serializable {
 			int layerSize = nodesByLayer[nodeLayer].size();
 			
 			double x = nodeLayer/(double)(layers-1);
-			double margin = height/(double)layerSize;
+			double margin = height/(double)(layerSize);
 			double y = layerCounts[nodeLayer]++*margin;
 			
 			double margined = (layerSize-1)*margin;
 			x *= width;
-			y += height/2d - margined/2d;
+			y += height/2d - margined/2d - nodeSize/2d;
 			
 			if (node.getType() == TYPE.OUTPUT)
-				x -= (nodeSize+4);
-			else if (node.getType() == TYPE.INPUT)
-				x += 4;
-			else x -= nodeSize/2d;
+				x -= (nodeSize);
+			else if (node.getType() == TYPE.HIDDEN)
+				x -= nodeSize/2d;
 			
 			if (nodesCoordinates.containsKey(node)) {
 				nodesCoordinates.get(node)[0] = x;
@@ -366,6 +365,9 @@ public class Genome implements Serializable {
 		default:
 			break;
 		}
+		setNodesByType();
+		handleIsolatedNodes();
+		updateLayers();
 	}
 	private void featureSelectionNeatNoHiddenInit() {
 		
