@@ -588,7 +588,7 @@ public class Genome implements Serializable {
 		if (isRecurrent && (neatConfig.isFeedForward() || random.nextDouble() >= neatConfig.getProbRecurrentConnection()))
 			return false;
 		
-		addConnection(node1, node2, Connection.VOID_DOUBLE_VALUE, node1.getLayer() >= node2.getLayer());
+		addConnection(node1, node2, Connection.VOID_DOUBLE_VALUE, isRecurrent);
 		setMaxInnovationNumber();
 		mutated = true;
 		return true;
