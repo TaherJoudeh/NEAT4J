@@ -570,29 +570,9 @@ public class Genome implements Serializable {
 
 		if (random.nextDouble() >= neatConfig.getProbAddConnection())
 			return false;
-		
-		int numOfLayers = numOfHiddenlayers+2;
-		Node node1 = null, node2 = null;
-		
-		if (!neatConfig.isFeedForward() && random.nextDouble() < neatConfig.getProbRecurrentConnection()) {
-			int randomLayer = random.nextInt(numOfLayers-1)+1;
-			int secondRandomLayer = random.nextInt(randomLayer)+1;
-			
-			int sizeOfRandomLayer = nodesByLayer[randomLayer].size();
-			int sizeOfSecondRandomLayer = nodesByLayer[secondRandomLayer].size();
-			
-			node1 = nodesByLayer[randomLayer].get(random.nextInt(sizeOfRandomLayer));
-			node2 = nodesByLayer[secondRandomLayer].get(random.nextInt(sizeOfSecondRandomLayer));
-		}else {
-			int randomLayer = random.nextInt(numOfLayers-1);
-			int secondRandomLayer = random.nextInt(numOfLayers-(randomLayer+1))+(randomLayer+1);
-			
-			int sizeOfRandomLayer = nodesByLayer[randomLayer].size();
-			int sizeOfSecondRandomLayer = nodesByLayer[secondRandomLayer].size();
-			
-			node1 = nodesByLayer[randomLayer].get(random.nextInt(sizeOfRandomLayer));
-			node2 = nodesByLayer[secondRandomLayer].get(random.nextInt(sizeOfSecondRandomLayer));
-		}
+
+		Node node1 = getRandomNode();
+		Node node2 = getRandomNode();
 		
 		Connection newConnection = new Connection(node1,node2);
 		int index = connections.indexOf(newConnection);
@@ -603,11 +583,14 @@ public class Genome implements Serializable {
 					return true;
 			}else return false;
 		}
-			
+		
+		boolean isRecurrent = node1.getLayer() >= node2.getLayer();
+		if (isRecurrent && (neatConfig.isFeedForward() || random.nextDouble() >= neatConfig.getProbRecurrentConnection()))
+			return false;
+		
 		addConnection(node1, node2, Connection.VOID_DOUBLE_VALUE, node1.getLayer() >= node2.getLayer());
 		setMaxInnovationNumber();
 		mutated = true;
-		
 		return true;
 		
 	}
@@ -926,6 +909,10 @@ public class Genome implements Serializable {
 				return node;
 		
 		return null;
+	}
+	
+	private Node getRandomNode() {
+		return nodes.get(random.nextInt(nodes.size()));
 	}
 	
     /**
