@@ -218,14 +218,12 @@ Agent agent = new Agent(genome);
 
 ### Activation Functions
 - `startingActivationFunctionForHiddenNode`: Default activation for hidden nodes (default: SIGMOID)
-- `startingActivationFunctionForOutputNode`: Default activation for output nodes (default: SIGMOID)
-- `activationDefault`: Default activation for new nodes (default: SIGMOID)
+- `activationFunctionForOutputNode`: Default activation for output nodes (default: SIGMOID)
 - `activationMutationRate`: Probability of changing activation function (default: 0)
 - `activationConfig`: Configuration of available activation functions
 
 ### Aggregation Functions
 - `startingAggregationFunction`: Default aggregation function (default: SUM)
-- `aggregationDefault`: Default aggregation for new nodes (default: SUM)
 - `aggregationMutationRate`: Probability of changing aggregation function (default: 0)
 - `aggregationConfig`: Configuration of available aggregation functions
 
