@@ -401,10 +401,19 @@ public class NEATConfigBuilder {
 	}
 	
     /**
-     * Sets the default aggregation function for new nodes.
-     * 
-     * This function determines how a node combines its inputs.
-     * Default value is SUM.
+	 * Sets the default aggregation function for nodes created during evolution.
+	 * 
+	 * Determines how new nodes will combine their input signals when created
+	 * through mutation. This is separate from the starting aggregation function
+	 * used during initial network creation.
+	 * 
+	 * Common choices:
+	 * - SUM (default)
+	 * - PRODUCT 
+	 * - MIN
+	 * - MAX
+	 * - MEAN
+	 * - MAXABS
      * 
      * @param startingAggregationFunction The default aggregation function. If null, then the new value will not be set.
      * @return This builder instance for method chaining.
@@ -473,30 +482,6 @@ public class NEATConfigBuilder {
 	public NEATConfigBuilder setActivationMutationRate(double activationMutationRate) {
 		if (activationMutationRate >= 0 && activationMutationRate <= 1)
 			neatConfig.activationMutationRate = activationMutationRate;
-		return this;
-	}
-	
-	/**
-	 * Sets the default aggregation function for nodes created during evolution.
-	 * 
-	 * Determines how new nodes will combine their input signals when created
-	 * through mutation. This is separate from the starting aggregation function
-	 * used during initial network creation.
-	 * 
-	 * Common choices:
-	 * - SUM (default)
-	 * - PRODUCT 
-	 * - MIN
-	 * - MAX
-	 * - MEAN
-	 * - MAXABS
-	 * 
-	 * @param aggregationDefault Default aggregation function for new nodes. If null, then the new value will not be set.
-	 * @return This builder instance.
-	 */
-	public NEATConfigBuilder setAggregationDefault(AggregationFunction.AGGREGATION_FUNCTION aggregationDefault) {
-		if (aggregationDefault != null)
-			neatConfig.aggregationDefault = aggregationDefault;
 		return this;
 	}
 	

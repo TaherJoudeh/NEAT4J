@@ -759,7 +759,7 @@ public class Genome implements Serializable {
 				node.randomizeBias(neatConfig.getBiasInitMean(), neatConfig.getBiasInitStdev(), neatConfig.getBiasInitDistributionType(),
 						neatConfig.getBiasMaxValue(), neatConfig.getBiasMinValue()); 
 			
-			if (node.getType() == TYPE.HIDDEN && random.nextDouble() < neatConfig.getAggregationMutationRate()) {
+			if (random.nextDouble() < neatConfig.getAggregationMutationRate()) {
 				int size = neatConfig.getAggregationConfig().getAllowedAggregationFunctions().size();
 				int randomIndex = random.nextInt(size);
 				node.setAggregationFunction(AggregationFunction.getAggregationFunction(

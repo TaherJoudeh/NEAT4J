@@ -361,12 +361,6 @@ public class NEATConfig implements Serializable {
 	protected double activationMutationRate = 0;
 	
     /**
-     * Default aggregation function for new nodes.
-     * Default is SUM.
-     */
-	protected AggregationFunction.AGGREGATION_FUNCTION aggregationDefault = AggregationFunction.AGGREGATION_FUNCTION.SUM;
-	
-    /**
      * Probability of mutating a node's aggregation function.
      * Default is 0.
      */
@@ -863,13 +857,6 @@ public class NEATConfig implements Serializable {
 	 * @return The activation function mutation rate between 0 and 1
 	 */
 	public double getActivationMutationRate() { return activationMutationRate; }
-	
-	/**
-	 * Returns the default aggregation function for nodes created during evolution.
-	 * 
-	 * @return The default aggregation function
-	 */
-	public AggregationFunction.AGGREGATION_FUNCTION getAggregationDefault() { return aggregationDefault; }
 	
 	/**
 	 * Returns the probability of mutating a node's aggregation function.
