@@ -333,10 +333,10 @@ public class NEATConfig implements Serializable {
 	protected ActivationFunction.ACTIVATION_FUNCTION startingActivationFunctionForHiddenNode = ActivationFunction.ACTIVATION_FUNCTION.SIGMOID;
 	
     /**
-     * Activation function to use for new output nodes.
+     * Activation function to use for output nodes.
      * Default is SIGMOID.
      */
-	protected ActivationFunction.ACTIVATION_FUNCTION startingActivationFunctionForOutputNode = ActivationFunction.ACTIVATION_FUNCTION.SIGMOID;
+	protected ActivationFunction.ACTIVATION_FUNCTION activationFunctionForOutputNode = ActivationFunction.ACTIVATION_FUNCTION.SIGMOID;
 	
     /**
      * Configuration for allowed aggregation functions.
@@ -353,13 +353,7 @@ public class NEATConfig implements Serializable {
      * Default is UNCONNECTED.
      */
 	protected CONNECTIVITY initConnectivity = CONNECTIVITY.UNCONNECTED;
-	
-    /**
-     * Default activation function for new nodes.
-     * Default is SIGMOID.
-     */
-	protected ActivationFunction.ACTIVATION_FUNCTION activationDefault = ActivationFunction.ACTIVATION_FUNCTION.SIGMOID;
-	
+		
     /**
      * Probability of mutating a node's activation function.
      * Default is 0.
@@ -831,12 +825,12 @@ public class NEATConfig implements Serializable {
 	public ActivationFunction.ACTIVATION_FUNCTION getStartingActivationFunctionForHiddenNodes() { return startingActivationFunctionForHiddenNode; }
 	
 	/**
-	 * Returns the default activation function for new output nodes.
+	 * Returns the default activation function for output nodes.
 	 * This function determines how an output node transforms its aggregated input to output.
 	 * 
 	 * @return The default activation function for output nodes
 	 */
-	public ActivationFunction.ACTIVATION_FUNCTION getStartingActivationFunctionForOutputNodes(){ return startingActivationFunctionForOutputNode; }
+	public ActivationFunction.ACTIVATION_FUNCTION getActivationFunctionForOutputNodes(){ return activationFunctionForOutputNode; }
 	
 	/**
 	 * Returns the configuration for allowed aggregation functions.
@@ -861,13 +855,6 @@ public class NEATConfig implements Serializable {
 	 * @return The initial connectivity pattern
 	 */
 	public CONNECTIVITY getInitConnectivity() { return initConnectivity; }
-	
-	/**
-	 * Returns the default activation function for nodes created during evolution.
-	 * 
-	 * @return The default activation function
-	 */
-	public ActivationFunction.ACTIVATION_FUNCTION getActivationDefault(){ return activationDefault; }
 	
 	/**
 	 * Returns the probability of mutating a node's activation function.

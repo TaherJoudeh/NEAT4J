@@ -439,9 +439,9 @@ public class NEATConfigBuilder {
      * @param startingActivationFunctionForOutputNodes The default activation function for output nodes. If null, then the new value will not be set.
      * @return This builder instance for method chaining.
      */
-	public NEATConfigBuilder setStartingActivationFunctionForOutputNodes(ActivationFunction.ACTIVATION_FUNCTION startingActivationFunctionForOutputNodes) {
-		if (startingActivationFunctionForOutputNodes != null)
-			neatConfig.startingActivationFunctionForOutputNode = startingActivationFunctionForOutputNodes;
+	public NEATConfigBuilder setActivationFunctionForOutputNodes(ActivationFunction.ACTIVATION_FUNCTION activationFunctionForOutputNodes) {
+		if (activationFunctionForOutputNodes != null)
+			neatConfig.activationFunctionForOutputNode = activationFunctionForOutputNodes;
 		return this;
 	}
 	
@@ -458,29 +458,6 @@ public class NEATConfigBuilder {
 	public NEATConfigBuilder setInitConnectivity(CONNECTIVITY initConnectivity) {
 		if (initConnectivity != null)
 			neatConfig.initConnectivity = initConnectivity;
-		return this;
-	}
-	
-	/**
-	 * Sets the default activation function for nodes created during evolution.
-	 * 
-	 * This defines which activation function is used when new nodes are created 
-	 * through mutation and no specific function is assigned. This is separate from
-	 * the starting activation functions for initial network configuration.
-	 * 
-	 * Common choices:
-	 * - SIGMOID (default)
-	 * - RELU
-	 * - TANH
-	 * - LINEAR
-	 * - STEP 
-	 * 
-	 * @param activationDefault Default activation function for new nodes. If null, then the new value will not be set.
-	 * @return This builder instance.
-	 */
-	public NEATConfigBuilder setActivationDefault(ActivationFunction.ACTIVATION_FUNCTION activationDefault) {
-		if (activationDefault != null)
-			neatConfig.activationDefault = activationDefault;
 		return this;
 	}
 	

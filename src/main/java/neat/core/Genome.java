@@ -324,7 +324,7 @@ public class Genome implements Serializable {
 					neatConfig.getStartingAggregationFunction()
 					));
 			node.setActivationFunction(ActivationFunction.getActivationFunction(
-					neatConfig.getStartingActivationFunctionForOutputNodes(), neatConfig.getActivationConfig()
+					neatConfig.getActivationFunctionForOutputNodes(), neatConfig.getActivationConfig()
 					));
 			node.randomizeBias(neatConfig.getBiasInitMean(),neatConfig.getBiasInitStdev(),neatConfig.getBiasInitDistributionType(),
 					neatConfig.getBiasMaxValue(),neatConfig.getBiasMinValue());
@@ -766,7 +766,7 @@ public class Genome implements Serializable {
 						neatConfig.getAggregationConfig().getAllowedAggregationFunctions().get(randomIndex)
 						));
 			}
-			if (node.getType() != TYPE.INPUT && random.nextDouble() < neatConfig.getActivationMutationRate()) {
+			if (node.getType() == TYPE.HIDDEN && random.nextDouble() < neatConfig.getActivationMutationRate()) {
 				int size = neatConfig.getActivationConfig().getAllowedActivationFunctions().size();
 				int randomIndex = random.nextInt(size);
 				node.setActivationFunction(ActivationFunction.getActivationFunction(
